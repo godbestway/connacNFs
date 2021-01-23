@@ -48,8 +48,18 @@ void showConnState(connState* conn_state){
 
     printf("src_ip %s\n", src_str);
     printf("ds_ip %s\n", dst_str);
-    printf("mac_dst %u\n",conn_state->ether_dst[0]);
-    printf("mac_src %u\n",conn_state->ether_src[0]);
+    printf("mac_dst %u",conn_state->ether_dst[0]);
+    printf(" %u",conn_state->ether_dst[1]);
+    printf(" %u",conn_state->ether_dst[2]);
+    printf(" %u",conn_state->ether_dst[3]);
+    printf(" %u",conn_state->ether_dst[4]);
+    printf(" %u\n",conn_state->ether_dst[5]);
+    printf("mac_src %u",conn_state->ether_src[0]);
+    printf(" %u",conn_state->ether_src[1]);
+    printf(" %u",conn_state->ether_src[2]);
+    printf(" %u",conn_state->ether_src[3]);
+    printf(" %u",conn_state->ether_src[4]);
+    printf(" %u\n",conn_state->ether_src[5]);
     printf("s_port %u\n",conn_state->s_port);
     printf("d_port %u\n",conn_state->d_port);
     printf("cxid  %lu\n",conn_state->cxid);
