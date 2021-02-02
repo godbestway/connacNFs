@@ -24,10 +24,12 @@
 /*  I N C L U D E S  **********************************************************/
 #ifndef PRADS_H
 #define PRADS_H
+
 #include "common.h"
 #include "bstrlib.h"
 #include <netinet/in.h>
 #include <pcre.h>
+#include <CONNAC.h>
 
 /*  D E F I N E S  ************************************************************/
 #ifndef RELEASE
@@ -178,6 +180,9 @@
 #define FROMCLIENT                     1
 #define CXT_DEFAULT_HASHSIZE           65536
 #define CXT_DEFAULT_PREALLOC           10000
+
+pthread_mutex_t ConnEntryLock;
+pthread_mutex_t ActionEntryLock;
 
 /*  D A T A  S T R U C T U R E S  *********************************************/
 
@@ -518,8 +523,10 @@ typedef struct _connState {
     struct   in6_addr d_ip;       /* destination address */
     uint16_t s_port;              /* source port */
     uint16_t d_port;              /* destination port */
+    uint16_t hw_proto;            /* layer2 protocol */
+    uint8_t  proto;               /* IP protocoll type */
     uint64_t cxid;                /* connection id */
-    uint8_t  reversed;            /* 1 if the connection is reversed */
+    uint32_t hash;		  /*hash value*/
     
 } connState;
 
@@ -527,13 +534,6 @@ typedef struct _connState {
  * Structure for storing packets status
  *++
  */
-
-typedef struct {
-    
-    int pkts_received;
-    int flows_active;
-    
-} CONNACStatistics; 
 
 
 /*
@@ -547,22 +547,23 @@ typedef struct _actionState {
     time_t   last_pkt_time;       /* last seen packet time */
     uint64_t cxid;                /* connection id */
     uint8_t  reversed;            /* 1 if the connection is reversed */
-    uint32_t af;                  /* IP version (4/6) AF_INET */
-    uint16_t hw_proto;            /* layer2 protocol */
-    uint8_t  proto;               /* IP protocoll type */
-                
+    uint32_t af;                  /* IP version (4/6) AF_INET */           
     uint64_t s_total_pkts;        /* total source packets */
     uint64_t s_total_bytes;       /* total source bytes */
     uint64_t d_total_pkts;        /* total destination packets */
     uint64_t d_total_bytes;       /* total destination bytes */
+    //uint16_t hw_proto;            /* layer2 protocol */
     uint8_t  s_tcpFlags;          /* tcpflags sent by source */
     uint8_t  __pad__;             /* pads struct to alignment */
     uint8_t  d_tcpFlags;          /* tcpflags sent by destination */
     uint8_t  check;               /* Flags spesifying checking */
+//+++
+    uint32_t hash;		  /*hash value*/
+//+++
     struct   _asset *c_asset;     /* pointer to src asset */
     struct   _asset *s_asset;     /* pointer to server asset */
 
-    
+    //uint8_t  proto;               /* IP protocoll type */
     
 } actionState;
 
@@ -917,9 +918,7 @@ typedef struct _fmask {
 #define IS_CSSET(config, flags) (((config)->cof & (flags)) == (flags))
 
 /*  P R O T O T Y P E S  ******************************************************/
-//+++
-extern CONNACStatistics connac_stats;
-//+++
+
 void free_config();
 // can't declare in sys_func.h because it does not include prads.h!
 const char *u_ntop_src(packetinfo *pi, char* dest);

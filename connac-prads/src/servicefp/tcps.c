@@ -33,6 +33,8 @@ void service_tcp4(packetinfo *pi, signature* sig_serv_tcp)
     signature *tmpsig;
     bstring app,service_name;
 
+
+    //printf("service_tcp4");
     if (pi->plen < PAYLOAD_MIN) return; // if almost no payload - skip
     /* should make a config.tcp_server_flowdept etc
      * a range between 500-1000 should be good?
@@ -50,6 +52,7 @@ void service_tcp4(packetinfo *pi, signature* sig_serv_tcp)
             update_asset_service(pi, tmpsig->service, app);
             //pi->cxt->check |= CXT_SERVICE_DONT_CHECK;
 //+++
+	    //printf("pi->action_state->check");
 	    pi->action_state ->check |= CXT_SERVICE_DONT_CHECK;
 //+++
             bdestroy(app);

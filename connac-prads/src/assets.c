@@ -5,6 +5,8 @@
 #include "output-plugins/log.h"
 #include "config.h"
 #include "mac.h"
+#include <CONNAC.h>
+#include "local.h"
 
 extern globalconfig config;
 static asset *passet[BUCKET_SIZE];

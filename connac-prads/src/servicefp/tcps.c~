@@ -33,6 +33,8 @@ void service_tcp4(packetinfo *pi, signature* sig_serv_tcp)
     signature *tmpsig;
     bstring app,service_name;
 
+
+    printf("service_tcp4");
     if (pi->plen < PAYLOAD_MIN) return; // if almost no payload - skip
     /* should make a config.tcp_server_flowdept etc
      * a range between 500-1000 should be good?
@@ -48,8 +50,9 @@ void service_tcp4(packetinfo *pi, signature* sig_serv_tcp)
             app = get_app_name(tmpsig, pi->payload, ovector, rc);
             //printf("[*] - MATCH SERVICE IPv4/TCP: %s\n",(char *)bdata(app));
             update_asset_service(pi, tmpsig->service, app);
-            pi->cxt->check |= CXT_SERVICE_DONT_CHECK;
+            //pi->cxt->check |= CXT_SERVICE_DONT_CHECK;
 //+++
+	    printf("pi->action_state->check");
 	    pi->action_state ->check |= CXT_SERVICE_DONT_CHECK;
 //+++
             bdestroy(app);
@@ -65,10 +68,10 @@ void service_tcp4(packetinfo *pi, signature* sig_serv_tcp)
         tmpsig = tmpsig->next;
     }
     // Should have a flag set to resolve unknowns to default service
-    if ( !ISSET_SERVICE_UNKNOWN(pi)
+    if ( !ACTION_ISSET_SERVICE_UNKNOWN(pi)
         && (service_name = check_known_port(IP_PROTO_TCP,ntohs(pi->s_port))) !=NULL ) {
         update_asset_service(pi, UNKNOWN, service_name);
-        pi->cxt->check |= CXT_SERVICE_UNKNOWN_SET;
+        //pi->cxt->check |= CXT_SERVICE_UNKNOWN_SET;
 //+++
 	pi->action_state ->check |= CXT_SERVICE_UNKNOWN_SET;
 //+++
@@ -99,7 +102,7 @@ void service_tcp6(packetinfo *pi, signature* sig_serv_tcp)
             app = get_app_name(tmpsig, pi->payload, ovector, rc);
             //printf("[*] - MATCH SERVICE IPv6/TCP: %s\n",(char *)bdata(app));
             update_asset_service(pi, tmpsig->service, app);
-            pi->cxt->check |= CXT_SERVICE_DONT_CHECK;
+            //pi->cxt->check |= CXT_SERVICE_DONT_CHECK;
 //+++
 	    pi->action_state ->check |= CXT_SERVICE_DONT_CHECK;
 //+++
@@ -109,10 +112,10 @@ void service_tcp6(packetinfo *pi, signature* sig_serv_tcp)
         tmpsig = tmpsig->next;
     }
     // Should have a flag set to resolve unknowns to default service
-    if ( !ISSET_SERVICE_UNKNOWN(pi)
+    if ( !ACTION_ISSET_SERVICE_UNKNOWN(pi)
         && (service_name = check_known_port(IP_PROTO_TCP,ntohs(pi->s_port))) !=NULL ) {
         update_asset_service(pi, UNKNOWN, service_name);
-        pi->cxt->check |= CXT_SERVICE_UNKNOWN_SET;
+        //pi->cxt->check |= CXT_SERVICE_UNKNOWN_SET;
 //+++
 	pi->action_state ->check |= CXT_SERVICE_UNKNOWN_SET;
 //+++

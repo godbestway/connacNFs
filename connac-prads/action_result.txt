@@ -1,0 +1,651 @@
+./local.h:int local_action_get_perflow();
+./local.h:int local_action_put_perflow(ActionState* recv_state);
+./etc/local.h:int local_action_get_perflow();
+./etc/local.h:int local_action_put_perflow(ActionState* recv_state);
+./etc/mac.sig:00:01:89	Refraction             # Refraction Technology, Inc.
+./etc/mac.sig:00:0F:EF	ThalesE-Tr             # Thales e-Transactions GmbH
+./etc/mac.sig:00:14:8A	ElinEbgTra             # Elin Ebg Traction Gmbh
+./etc/eth.sig:00:01:89  Refraction Technology, Inc.
+./etc/eth.sig:00:C0:34  Transaction Network
+./src/prads.c:    action_tracking(pi);
+./src/prads.c:		   reverse_pi_conn_action(pi);
+./src/prads.c:    action_tracking(pi);
+./src/prads.c:    action_tracking(pi);
+./src/prads.c:        if (pi->action_state->check == 0x00) {
+./src/prads.c:            pi->action_state->check = 0x10; //for now - stop icmp fp quick
+./src/prads.c:        if (pi->action_state->check == 0x00) {
+./src/prads.c:            pi->action_state->check = 0x10; //for now - stop icmp fp quick
+./src/prads.c:    action_tracking(pi);
+./src/prads.c:    if (pi->action_state->check == 0x00) {
+./src/prads.c:            pi->action_state->check = 0x01; // no more checks
+./src/prads.c:    //locals.action_get_perflow = &local_action_get_perflow;
+./src/prads.c:    //locals.action_put_perflow = &local_action_put_perflow;
+./src/bstrlib.txt:    6) There is no memory management, and actions performed such as strcpy,
+./src/bstrlib.txt:perform no detrimental action.
+./src/bstrlib.txt:undefined action.  But due to C/C++ language and library limitations, there 
+./src/bstrlib.txt:due to undefined action.
+./src/bstrlib.txt:    no action taken, and BSTR_ERR will be returned.
+./src/bstrlib.txt:    already large enough, not action is performed.  This has no effect on the 
+./src/bstrlib.txt:    action is purely reference oriented; no memory management is done.  The 
+./src/bstrlib.txt:    action is purely reference oriented; no memory management is done.  The 
+./src/bstrlib.txt:    has been left trimmed.  This action is purely reference oriented; no 
+./src/bstrlib.txt:    has been right trimmed.  This action is purely reference oriented; no 
+./src/bstrlib.txt:    has been left and right trimmed.  This action is purely reference 
+./src/bstrlib.txt:    the bstring b.  This action is purely reference oriented; no memory 
+./src/bstrlib.txt:    action makes the bstring both writable and destroyable.  If the bstring is
+./src/bstrlib.txt:overhead lost has to be compared against the value of the safe abstraction 
+./src/bstrlib.txt:The C++ interface has been designed with an emphasis on abstraction and safety
+./src/bstrlib.txt:to individual character extraction being actually slower than other languages 
+./src/bstrlib.txt:It is common for other C++ libraries to leverage the abstractions provided by
+./src/bstrlib.txt:To correctly work around this problem to the satisfaction of the ANSI 
+./src/bstrlib.txt:no other action other than to explicitely cast the void * parameter to a
+./src/bstrlib.txt:return of control performs no (additional) detrimental action.  The proposal 
+./src/bstrlib.txt:2. Introduction of memory (and vector?) abstractions imposes a learning
+./src/bstrlib.txt:actions (adds, inserts and deletes are all constant or roughly O(#operations) 
+./src/local.h:int local_action_get_perflow();
+./src/local.h:int local_action_put_perflow(ActionState* recv_state);
+./src/assets.c:asset* action_connection_lookup(packetinfo *pi)
+./src/assets.c:   if(NULL == pi->action_state){
+./src/assets.c:   if (pi->sc == SC_CLIENT && pi->action_state->reversed == 0 && pi->action_state->c_asset != NULL) {
+./src/assets.c:      return pi->action_state->c_asset;
+./src/assets.c:   } else if (pi->sc == SC_CLIENT && pi->action_state->reversed == 1 && pi->action_state->s_asset != NULL) {
+./src/assets.c:      return pi->action_state->s_asset;
+./src/assets.c:   } else if (pi->sc == SC_SERVER && pi->action_state->reversed == 0 && pi->action_state->s_asset != NULL) {
+./src/assets.c:      return pi->action_state->s_asset;
+./src/assets.c:   } else if (pi->sc == SC_SERVER && pi->action_state->reversed == 1 && pi->action_state->c_asset != NULL) {
+./src/assets.c:      return pi->action_state->c_asset;
+./src/assets.c:    if (pi->asset != NULL || NULL != (pi->asset = action_connection_lookup(pi))){
+Binary file ./src/assets.o matches
+./src/cxt.c:actionState *action_bucket[BUCKET_SIZE];
+./src/cxt.c:int local_action_put_perflow(ActionState* recv_state){
+./src/cxt.c:    printf("receive action state, begin to putPerFlow");
+./src/cxt.c:    actionState *action_state = NULL;
+./src/cxt.c:    action_state =(actionState*)malloc(sizeof(actionState));
+./src/cxt.c:    action_state->start_time = recv_state->start_time;
+./src/cxt.c:    action_state->last_pkt_time = recv_state->last_pkt_time;
+./src/cxt.c:    action_state->cxid = recv_state->cxid;
+./src/cxt.c:    action_state->reversed = recv_state->reversed;
+./src/cxt.c:    action_state->af = recv_state->af;
+./src/cxt.c:    action_state->hw_proto = recv_state->hw_proto;
+./src/cxt.c:    action_state->proto = recv_state->proto;
+./src/cxt.c:    action_state->s_total_pkts = recv_state->s_total_pkts;
+./src/cxt.c:    action_state->s_total_bytes= recv_state->s_total_bytes;
+./src/cxt.c:    action_state->d_total_pkts = recv_state->d_total_pkts;
+./src/cxt.c:    action_state->d_total_bytes = recv_state->d_total_bytes;
+./src/cxt.c:    action_state->s_tcpFlags = recv_state->s_tcpflags;
+./src/cxt.c:    action_state->__pad__ = recv_state->pad;
+./src/cxt.c:    action_state->d_tcpFlags = recv_state->d_tcpflags;  
+./src/cxt.c:    action_state->check = recv_state->check;
+./src/cxt.c:    action_state->hash = hash;
+./src/cxt.c:    actionState* head = NULL;
+./src/cxt.c:    head = action_bucket[hash];
+./src/cxt.c:    action_state->prev = NULL;
+./src/cxt.c:        head->prev = action_state;
+./src/cxt.c:        action_state->next = head;
+./src/cxt.c:    { action_state->next = NULL; }
+./src/cxt.c:    action_bucket[hash] = action_state;
+./src/cxt.c:static void *action_sender(void *arg){
+./src/cxt.c:	//printf("local_get_action hash %d\n", hash);
+./src/cxt.c:	//printf("local_get_action cxid %d\n", cxid);
+./src/cxt.c:	int send_action = local_action_get_one_perflow(hash-1,cxid);
+./src/cxt.c:	if(send_action < 0){
+./src/cxt.c:ProtoObject* proto_compose_action_perflow_message(actionState *action_state){
+./src/cxt.c:	ActionState action_perflow = ACTION_STATE__INIT;
+./src/cxt.c:        long start_time = action_state->start_time;
+./src/cxt.c:        action_perflow.start_time = start_time;
+./src/cxt.c:	long last_pkt_time =action_state->last_pkt_time;
+./src/cxt.c:	action_perflow.last_pkt_time = last_pkt_time;
+./src/cxt.c:	action_perflow.cxid = action_state->cxid;
+./src/cxt.c:	action_perflow.reversed = action_state->reversed;
+./src/cxt.c:	action_perflow.af = action_state->af;
+./src/cxt.c:	action_perflow.hw_proto = action_state->hw_proto;
+./src/cxt.c:	action_perflow.proto = action_state->proto;
+./src/cxt.c:	action_perflow.s_total_pkts = action_state->s_total_pkts;
+./src/cxt.c:	action_perflow.s_total_bytes = action_state->s_total_bytes;
+./src/cxt.c:	action_perflow.d_total_pkts = action_state->d_total_pkts;
+./src/cxt.c:	action_perflow.d_total_bytes = action_state->d_total_bytes;
+./src/cxt.c:	action_perflow.s_tcpflags = action_state->s_tcpFlags;
+./src/cxt.c:	action_perflow.pad = action_state->__pad__;
+./src/cxt.c:	action_perflow.d_tcpflags = action_state-> d_tcpFlags;
+./src/cxt.c:	action_perflow.check = action_state->check;
+./src/cxt.c:	action_perflow.hash = action_state->hash;
+./src/cxt.c:    	len = action_state__get_packed_size(&action_perflow);
+./src/cxt.c:    	printf("send size of action_perflow : %u\n", len);
+./src/cxt.c:    	action_state__pack(&action_perflow, buf);
+./src/cxt.c:int local_action_get_one_perflow(int hash, int cxid){
+./src/cxt.c:        printf("local get one action per flow\n");	
+./src/cxt.c:	actionState *action_state = action_bucket[h];
+./src/cxt.c:	while(action_state != NULL){
+./src/cxt.c:		if(action_state->cxid != cxid){
+./src/cxt.c:			//printf("get one action cxid middle %d\n",head->cxid);
+./src/cxt.c:		//printf("get one action hash %d\n",hash);
+./src/cxt.c:		//printf("get one action cxid %d\n",cxid);
+./src/cxt.c:		ActionState action_perflow;
+./src/cxt.c:		action_state__init(&aaction_perflow);
+./src/cxt.c:        	long start_time = action_state->start_time;
+./src/cxt.c:        	action_perflow->start_time = start_time;
+./src/cxt.c:		long last_pkt_time =action_state->last_pkt_time;
+./src/cxt.c:		action_perflow->last_pkt_time = last_pkt_time;
+./src/cxt.c:		action_perflow->cxid = action_state->cxid;
+./src/cxt.c:		action_perflow->reversed = action_state->reversed;
+./src/cxt.c:		action_perflow->af = action_state->af;
+./src/cxt.c:		//action_perflow->hw_proto = action_state->hw_proto;
+./src/cxt.c:		//action_perflow->proto = action_state->proto;
+./src/cxt.c:		action_perflow->s_total_pkts = action_state->s_total_pkts;
+./src/cxt.c:		action_perflow->s_total_bytes = action_state->s_total_bytes;
+./src/cxt.c:		action_perflow->d_total_pkts = action_state->d_total_pkts;
+./src/cxt.c:		action_perflow->d_total_bytes = action_state->d_total_bytes;
+./src/cxt.c:		action_perflow->s_tcpflags = action_state->s_tcpFlags;
+./src/cxt.c:		action_perflow->pad = action_state->__pad__;
+./src/cxt.c:		action_perflow->d_tcpflags = action_state-> d_tcpFlags;
+./src/cxt.c:		action_perflow->check = action_state->check;
+./src/cxt.c:		action_perflow->hash = action_state->hash;
+./src/cxt.c:        	actionstate.has_data=1;
+./src/cxt.c:        	my_action_message__init(&mes);
+./src/cxt.c:        	mes.actionstate = &actionstate;
+./src/cxt.c:        	int len = my_action_message__get_packed_size(&mes);
+./src/cxt.c:        	my_action_message__pack(&mes, buf);
+./src/cxt.c:		int result = action_send_perflow(buf, len);    
+./src/cxt.c:	//printf("action end----------------------\n");
+./src/cxt.c:void showActionState(actionState* action_state){
+./src/cxt.c:    printf("---------------actionState------------------\n");
+./src/cxt.c:    printf("start_time %lu\n",action_state->start_time );
+./src/cxt.c:    printf("last_pkt_time %lu\n", action_state->last_pkt_time);
+./src/cxt.c:    printf("cxid: %lu\n",action_state->cxid);
+./src/cxt.c:    printf("reversed: %u\n",action_state->reversed);
+./src/cxt.c:    printf("af %u\n",action_state->af);
+./src/cxt.c:    //printf("hw_proto %u\n",action_state->hw_proto);
+./src/cxt.c:    //printf("proto %u\n",action_state->proto);
+./src/cxt.c:    printf("s_total_pkts  %lu\n",action_state->s_total_pkts);
+./src/cxt.c:    printf("s_total_bytes %lu\n",action_state->s_total_bytes);
+./src/cxt.c:    printf("d_total_pkts %lu\n",action_state->d_total_pkts);
+./src/cxt.c:    printf("d_total_bytes %lu\n",action_state->d_total_bytes);
+./src/cxt.c:    printf("s_tcpFlags %u\n",action_state->s_tcpFlags);
+./src/cxt.c:    printf("d_tcpFlags  %u\n",action_state->d_tcpFlags);
+./src/cxt.c:    printf("check %u\n",action_state->check);
+./src/cxt.c:    printf("hash  %u\n",action_state->hash);
+./src/cxt.c:    printf("---------------actionState------------------\n");
+./src/cxt.c: uint64_t action[100];
+./src/cxt.c: memset(action, 0, sizeof(action));
+./src/cxt.c: int count_action =0;
+./src/cxt.c:        actionState *action_state = action_bucket[h];
+./src/cxt.c:	while (action_state != NULL)
+./src/cxt.c:            printf("-----------action---h%d------------\n",h);
+./src/cxt.c:	    showActionState(action_state); 
+./src/cxt.c:            action[count_action] = action_state->cxid; 
+./src/cxt.c:            count_action++;     
+./src/cxt.c:            action_state = action_state->next;
+./src/cxt.c:    printf("count_action%d\n",count_action);
+./src/cxt.c:    for(i = 0; n<= count_action; n++){
+./src/cxt.c:	printf("%lu,",action[n]);
+./src/cxt.c: uint64_t action[100];
+./src/cxt.c: int count_action =0;
+./src/cxt.c:        actionState *action_state = action_bucket[h];
+./src/cxt.c:	while (action_state != NULL)
+./src/cxt.c:            action[count_action] = action_state->cxid; 
+./src/cxt.c:            count_action++;     
+./src/cxt.c:            action_state = action_state->next;
+./src/cxt.c:    printf("count_action%d\n",count_action);
+./src/cxt.c:    for(i = 0; n<= count_action; n++){
+./src/cxt.c:	printf("%lu,",action[n]);
+./src/cxt.c:actionState *action_cxt_new(packetinfo *pi)
+./src/cxt.c:    printf("create a new action");
+./src/cxt.c:    actionState *action_state;
+./src/cxt.c:    action_state = (actionState *) calloc(1, sizeof(actionState));
+./src/cxt.c:    assert(action_state);
+./src/cxt.c:    action_state->cxid = cxtrackerid;
+./src/cxt.c:    action_state->hash = pi->hash;
+./src/cxt.c:    action_state->af = pi->af;
+./src/cxt.c:    if(pi->tcph) action_state->s_tcpFlags = pi->tcph->t_flags;
+./src/cxt.c:    action_state->s_total_bytes = pi->packet_bytes;
+./src/cxt.c:    action_state->s_total_pkts = 1;
+./src/cxt.c:    action_state->start_time = pi->pheader->ts.tv_sec;
+./src/cxt.c:    action_state->last_pkt_time = pi->pheader->ts.tv_sec; 
+./src/cxt.c:    //action_state->proto = pi->proto;
+./src/cxt.c:    //action_state->hw_proto = ntohs(pi->eth_type);
+./src/cxt.c:    action_state->check = 0x00;
+./src/cxt.c:    action_state->c_asset = NULL;
+./src/cxt.c:    action_state->s_asset = NULL;
+./src/cxt.c:    action_state->reversed = 0;
+./src/cxt.c:    //showActionState(action_state);
+./src/cxt.c:    return action_state;
+./src/cxt.c:int action_tracking(packetinfo *pi)
+./src/cxt.c:    action_cx_track(pi);
+./src/cxt.c:int action_update_client(actionState *action_state, packetinfo *pi)
+./src/cxt.c:    action_state->last_pkt_time = pi->pheader->ts.tv_sec;
+./src/cxt.c:    if(pi->tcph) action_state->s_tcpFlags |= pi->tcph->t_flags;
+./src/cxt.c:    action_state->s_total_bytes += pi->packet_bytes;
+./src/cxt.c:    action_state->s_total_pkts += 1;
+./src/cxt.c:    pi->action_state = action_state;
+./src/cxt.c:    if(!action_state->c_asset)
+./src/cxt.c:        action_state->c_asset = pi->asset; // connection client asset
+./src/cxt.c:    if (action_state->s_total_bytes > MAX_BYTE_CHECK
+./src/cxt.c:        || action_state->s_total_pkts > MAX_PKT_CHECK) {
+./src/cxt.c:    //printf("action------SC_CLIENT ----------------------------\n");
+./src/cxt.c:    //showActionState(action_state);
+./src/cxt.c:int action_update_server(actionState *action_state, packetinfo *pi)
+./src/cxt.c:    action_state->last_pkt_time = pi->pheader->ts.tv_sec;
+./src/cxt.c:    if(pi->tcph) action_state->d_tcpFlags |= pi->tcph->t_flags;
+./src/cxt.c:    action_state->d_total_bytes += pi->packet_bytes;
+./src/cxt.c:    action_state->d_total_pkts += 1;
+./src/cxt.c:    pi->action_state = action_state;
+./src/cxt.c:    if(!action_state->s_asset)
+./src/cxt.c:        action_state->s_asset = pi->asset; // server asset
+./src/cxt.c:    if (action_state->d_total_bytes > MAX_BYTE_CHECK
+./src/cxt.c:        || action_state->d_total_pkts > MAX_PKT_CHECK) {
+./src/cxt.c:    //printf("action------SC_SERVER ----------------------------\n");
+./src/cxt.c:    //showActionState(action_state);
+./src/cxt.c:int action_cx_track(packetinfo *pi) {
+./src/cxt.c:    actionState *action_state = NULL;
+./src/cxt.c:    actionState *head = NULL;
+./src/cxt.c:    action_state = action_bucket[hash];
+./src/cxt.c:    head = action_state;
+./src/cxt.c:    while (action_state != NULL) {
+./src/cxt.c:        cxid = action_state->cxid;
+./src/cxt.c:	    /*printf("action-----action_state cxid: %lu\n",cxid);
+./src/cxt.c:            printf("action-----packet cxid: %lu\n",pi->cxid);
+./src/cxt.c:		printf("action----packet is from SC_SERVER\n");
+./src/cxt.c:		printf("action----packet is from SC_CLIENT\n");
+./src/cxt.c:                //printf("action---find the number SC-CLIENT, cxid: %lu\n",pi->cxid);
+./src/cxt.c:                return action_update_client(action_state, pi);
+./src/cxt.c:		//printf("action---find the number SC-SERVER, cxid: %lu\n",pi->cxid);
+./src/cxt.c:                return action_update_server(action_state, pi);
+./src/cxt.c:                return action_update_client(action_state, pi);
+./src/cxt.c:                return action_update_server(action_state, pi);
+./src/cxt.c:        action_state = action_state->next;
+./src/cxt.c:    action_state = action_cxt_new(pi);
+./src/cxt.c:    action_state->next = head;
+./src/cxt.c:        head->prev = action_state;
+./src/cxt.c:    action_bucket[hash] = action_state;
+./src/cxt.c:    pi->action_state = action_state;
+./src/cxt.c:void reverse_pi_conn_action(packetinfo *pi)
+./src/cxt.c:    actionState *action_state;
+./src/cxt.c:    action_state = pi->action_state;
+./src/cxt.c:    tmpFlags = action_state->s_tcpFlags;
+./src/cxt.c:    tmp_pkts = action_state->s_total_pkts;
+./src/cxt.c:    tmp_bytes = action_state->s_total_bytes;
+./src/cxt.c:    action_state->s_tcpFlags = action_state->d_tcpFlags;
+./src/cxt.c:    action_state->s_total_pkts = action_state->d_total_pkts;
+./src/cxt.c:    action_state->s_total_bytes = action_state->d_total_bytes;
+./src/cxt.c:    action_state->d_tcpFlags = tmpFlags; 
+./src/cxt.c:    action_state->d_total_pkts = tmp_pkts;
+./src/cxt.c:    action_state->d_total_bytes = tmp_bytes;
+./src/cxt.c:    action_state->c_asset = action_state->s_asset = NULL;
+./src/cxt.c:    action_state->check = 0x00;
+./src/cxt.c:    actionState *action_state;
+./src/cxt.c:        action_state = action_bucket[iter];
+./src/cxt.c:        while (action_state != NULL) {
+./src/cxt.c:                if (action_state->s_tcpFlags & TF_FIN && action_state->d_tcpFlags & TF_FIN
+./src/cxt.c:                    && (check_time - action_state->last_pkt_time) > 5) {
+./src/cxt.c:                else if ((action_state->s_tcpFlags & TF_RST
+./src/cxt.c:                          || action_state->d_tcpFlags & TF_RST)
+./src/cxt.c:                          && (check_time - action_state->last_pkt_time) > 5) {
+./src/cxt.c:                else if ((check_time - action_state->last_pkt_time) > TCP_TIMEOUT) {
+./src/cxt.c:                     && (check_time - action_state->last_pkt_time) > 60) {
+./src/cxt.c:                if ((check_time - action_state->last_pkt_time) > 60) {
+./src/cxt.c:            else if ((check_time - action_state->last_pkt_time) > TCP_TIMEOUT) {
+./src/cxt.c:		if(conn_state->cxid == action_state->cxid){
+./src/cxt.c:                if (action_state->prev)
+./src/cxt.c:                    action_state->prev->next = action_state->next;
+./src/cxt.c:                if (action_state->next)
+./src/cxt.c:                    action_state->next->prev = action_state->prev;
+./src/cxt.c:                actionState *tmp = action_state;
+./src/cxt.c:                action_state = action_state->prev;
+./src/cxt.c:                del_action_state(tmp, &action_bucket[iter]);
+./src/cxt.c:                if (action_state == NULL) {
+./src/cxt.c:                    action_bucket[iter] = NULL;
+./src/cxt.c:                action_state = action_state->prev;
+./src/cxt.c:void del_action_state(actionState * action_state, actionState ** bucket_ptr)
+./src/cxt.c:    actionState *prev = action_state->prev;       /* OLDER connections */
+./src/cxt.c:    actionState *next = action_state->next;       /* NEWER connections */
+./src/cxt.c:    free(action_state);
+./src/cxt.c:    action_state = NULL;
+Binary file ./src/cxt.o matches
+Binary file ./src/prads matches
+./src/bstrlib.h:/* Substring extraction */
+./src/bstrlib.c: *  then no action is performed and BSTR_ERR is returned.  Like a freed memory
+./src/bstrlib.c: *  allocation, dereferences, writes or any other action on b after it has 
+./src/cxt.c~:actionState *action_bucket[BUCKET_SIZE];
+./src/cxt.c~:int local_action_put_perflow(ActionState* recv_state){
+./src/cxt.c~:    printf("receive action state, begin to putPerFlow");
+./src/cxt.c~:    actionState *action_state = NULL;
+./src/cxt.c~:    action_state =(actionState*)malloc(sizeof(actionState));
+./src/cxt.c~:    action_state->start_time = recv_state->start_time;
+./src/cxt.c~:    action_state->last_pkt_time = recv_state->last_pkt_time;
+./src/cxt.c~:    action_state->cxid = recv_state->cxid;
+./src/cxt.c~:    action_state->reversed = recv_state->reversed;
+./src/cxt.c~:    action_state->af = recv_state->af;
+./src/cxt.c~:    action_state->hw_proto = recv_state->hw_proto;
+./src/cxt.c~:    action_state->proto = recv_state->proto;
+./src/cxt.c~:    action_state->s_total_pkts = recv_state->s_total_pkts;
+./src/cxt.c~:    action_state->s_total_bytes= recv_state->s_total_bytes;
+./src/cxt.c~:    action_state->d_total_pkts = recv_state->d_total_pkts;
+./src/cxt.c~:    action_state->d_total_bytes = recv_state->d_total_bytes;
+./src/cxt.c~:    action_state->s_tcpFlags = recv_state->s_tcpflags;
+./src/cxt.c~:    action_state->__pad__ = recv_state->pad;
+./src/cxt.c~:    action_state->d_tcpFlags = recv_state->d_tcpflags;  
+./src/cxt.c~:    action_state->check = recv_state->check;
+./src/cxt.c~:    action_state->hash = hash;
+./src/cxt.c~:    actionState* head = NULL;
+./src/cxt.c~:    head = action_bucket[hash];
+./src/cxt.c~:    action_state->prev = NULL;
+./src/cxt.c~:        head->prev = action_state;
+./src/cxt.c~:        action_state->next = head;
+./src/cxt.c~:    { action_state->next = NULL; }
+./src/cxt.c~:    action_bucket[hash] = action_state;
+./src/cxt.c~:static void *action_sender(void *arg){
+./src/cxt.c~:	//printf("local_get_action hash %d\n", hash);
+./src/cxt.c~:	//printf("local_get_action cxid %d\n", cxid);
+./src/cxt.c~:	int send_action = local_action_get_one_perflow(hash-1,cxid);
+./src/cxt.c~:	if(send_action < 0){
+./src/cxt.c~:ProtoObject* proto_compose_action_perflow_message(actionState *action_state){
+./src/cxt.c~:	ActionState action_perflow = ACTION_STATE__INIT;
+./src/cxt.c~:        long start_time = action_state->start_time;
+./src/cxt.c~:        action_perflow.start_time = start_time;
+./src/cxt.c~:	long last_pkt_time =action_state->last_pkt_time;
+./src/cxt.c~:	action_perflow.last_pkt_time = last_pkt_time;
+./src/cxt.c~:	action_perflow.cxid = action_state->cxid;
+./src/cxt.c~:	action_perflow.reversed = action_state->reversed;
+./src/cxt.c~:	action_perflow.af = action_state->af;
+./src/cxt.c~:	action_perflow.hw_proto = action_state->hw_proto;
+./src/cxt.c~:	action_perflow.proto = action_state->proto;
+./src/cxt.c~:	action_perflow.s_total_pkts = action_state->s_total_pkts;
+./src/cxt.c~:	action_perflow.s_total_bytes = action_state->s_total_bytes;
+./src/cxt.c~:	action_perflow.d_total_pkts = action_state->d_total_pkts;
+./src/cxt.c~:	action_perflow.d_total_bytes = action_state->d_total_bytes;
+./src/cxt.c~:	action_perflow.s_tcpflags = action_state->s_tcpFlags;
+./src/cxt.c~:	action_perflow.pad = action_state->__pad__;
+./src/cxt.c~:	action_perflow.d_tcpflags = action_state-> d_tcpFlags;
+./src/cxt.c~:	action_perflow.check = action_state->check;
+./src/cxt.c~:	action_perflow.hash = action_state->hash;
+./src/cxt.c~:    	len = action_state__get_packed_size(&action_perflow);
+./src/cxt.c~:    	printf("send size of action_perflow : %u\n", len);
+./src/cxt.c~:    	action_state__pack(&action_perflow, buf);
+./src/cxt.c~:int local_action_get_one_perflow(int hash, int cxid){
+./src/cxt.c~:        printf("local get one action per flow\n");	
+./src/cxt.c~:	actionState *action_state = action_bucket[h];
+./src/cxt.c~:	while(action_state != NULL){
+./src/cxt.c~:		if(action_state->cxid != cxid){
+./src/cxt.c~:			//printf("get one action cxid middle %d\n",head->cxid);
+./src/cxt.c~:		//printf("get one action hash %d\n",hash);
+./src/cxt.c~:		//printf("get one action cxid %d\n",cxid);
+./src/cxt.c~:		ActionState action_perflow;
+./src/cxt.c~:		action_state__init(&aaction_perflow);
+./src/cxt.c~:        	long start_time = action_state->start_time;
+./src/cxt.c~:        	action_perflow->start_time = start_time;
+./src/cxt.c~:		long last_pkt_time =action_state->last_pkt_time;
+./src/cxt.c~:		action_perflow->last_pkt_time = last_pkt_time;
+./src/cxt.c~:		action_perflow->cxid = action_state->cxid;
+./src/cxt.c~:		action_perflow->reversed = action_state->reversed;
+./src/cxt.c~:		action_perflow->af = action_state->af;
+./src/cxt.c~:		//action_perflow->hw_proto = action_state->hw_proto;
+./src/cxt.c~:		//action_perflow->proto = action_state->proto;
+./src/cxt.c~:		action_perflow->s_total_pkts = action_state->s_total_pkts;
+./src/cxt.c~:		action_perflow->s_total_bytes = action_state->s_total_bytes;
+./src/cxt.c~:		action_perflow->d_total_pkts = action_state->d_total_pkts;
+./src/cxt.c~:		action_perflow->d_total_bytes = action_state->d_total_bytes;
+./src/cxt.c~:		action_perflow->s_tcpflags = action_state->s_tcpFlags;
+./src/cxt.c~:		action_perflow->pad = action_state->__pad__;
+./src/cxt.c~:		action_perflow->d_tcpflags = action_state-> d_tcpFlags;
+./src/cxt.c~:		action_perflow->check = action_state->check;
+./src/cxt.c~:		action_perflow->hash = action_state->hash;
+./src/cxt.c~:        	actionstate.has_data=1;
+./src/cxt.c~:        	my_action_message__init(&mes);
+./src/cxt.c~:        	mes.actionstate = &actionstate;
+./src/cxt.c~:        	int len = my_action_message__get_packed_size(&mes);
+./src/cxt.c~:        	my_action_message__pack(&mes, buf);
+./src/cxt.c~:		int result = action_send_perflow(buf, len);    
+./src/cxt.c~:	//printf("action end----------------------\n");
+./src/cxt.c~:void showActionState(actionState* action_state){
+./src/cxt.c~:    printf("---------------actionState------------------\n");
+./src/cxt.c~:    printf("start_time %lu\n",action_state->start_time );
+./src/cxt.c~:    printf("last_pkt_time %lu\n", action_state->last_pkt_time);
+./src/cxt.c~:    printf("cxid: %lu\n",action_state->cxid);
+./src/cxt.c~:    printf("reversed: %u\n",action_state->reversed);
+./src/cxt.c~:    printf("af %u\n",action_state->af);
+./src/cxt.c~:    //printf("hw_proto %u\n",action_state->hw_proto);
+./src/cxt.c~:    //printf("proto %u\n",action_state->proto);
+./src/cxt.c~:    printf("s_total_pkts  %lu\n",action_state->s_total_pkts);
+./src/cxt.c~:    printf("s_total_bytes %lu\n",action_state->s_total_bytes);
+./src/cxt.c~:    printf("d_total_pkts %lu\n",action_state->d_total_pkts);
+./src/cxt.c~:    printf("d_total_bytes %lu\n",action_state->d_total_bytes);
+./src/cxt.c~:    printf("s_tcpFlags %u\n",action_state->s_tcpFlags);
+./src/cxt.c~:    printf("d_tcpFlags  %u\n",action_state->d_tcpFlags);
+./src/cxt.c~:    printf("check %u\n",action_state->check);
+./src/cxt.c~:    printf("hash  %u\n",action_state->hash);
+./src/cxt.c~:    printf("---------------actionState------------------\n");
+./src/cxt.c~: uint64_t action[100];
+./src/cxt.c~: memset(action, 0, sizeof(action));
+./src/cxt.c~: int count_action =0;
+./src/cxt.c~:        actionState *action_state = action_bucket[h];
+./src/cxt.c~:	while (action_state != NULL)
+./src/cxt.c~:            printf("-----------action---h%d------------\n",h);
+./src/cxt.c~:	    showActionState(action_state); 
+./src/cxt.c~:            action[count_action] = action_state->cxid; 
+./src/cxt.c~:            count_action++;     
+./src/cxt.c~:            action_state = action_state->next;
+./src/cxt.c~:    printf("count_action%d\n",count_action);
+./src/cxt.c~:    for(i = 0; n<= count_action; n++){
+./src/cxt.c~:	printf("%lu,",action[n]);
+./src/cxt.c~: uint64_t action[100];
+./src/cxt.c~: int count_action =0;
+./src/cxt.c~:        actionState *action_state = action_bucket[h];
+./src/cxt.c~:	while (action_state != NULL)
+./src/cxt.c~:            action[count_action] = action_state->cxid; 
+./src/cxt.c~:            count_action++;     
+./src/cxt.c~:            action_state = action_state->next;
+./src/cxt.c~:    printf("count_action%d\n",count_action);
+./src/cxt.c~:    for(i = 0; n<= count_action; n++){
+./src/cxt.c~:	printf("%lu,",action[n]);
+./src/cxt.c~:actionState *action_cxt_new(packetinfo *pi)
+./src/cxt.c~:    actionState *action_state;
+./src/cxt.c~:    action_state = (actionState *) calloc(1, sizeof(actionState));
+./src/cxt.c~:    assert(action_state);
+./src/cxt.c~:    action_state->cxid = cxtrackerid;
+./src/cxt.c~:    action_state->hash = pi->hash;
+./src/cxt.c~:    action_state->af = pi->af;
+./src/cxt.c~:    if(pi->tcph) action_state->s_tcpFlags = pi->tcph->t_flags;
+./src/cxt.c~:    action_state->s_total_bytes = pi->packet_bytes;
+./src/cxt.c~:    action_state->s_total_pkts = 1;
+./src/cxt.c~:    action_state->start_time = pi->pheader->ts.tv_sec;
+./src/cxt.c~:    action_state->last_pkt_time = pi->pheader->ts.tv_sec; 
+./src/cxt.c~:    //action_state->proto = pi->proto;
+./src/cxt.c~:    //action_state->hw_proto = ntohs(pi->eth_type);
+./src/cxt.c~:    action_state->check = 0x00;
+./src/cxt.c~:    action_state->c_asset = NULL;
+./src/cxt.c~:    action_state->s_asset = NULL;
+./src/cxt.c~:    action_state->reversed = 0;
+./src/cxt.c~:    //showActionState(action_state);
+./src/cxt.c~:    return action_state;
+./src/cxt.c~:int action_tracking(packetinfo *pi)
+./src/cxt.c~:    action_cx_track(pi);
+./src/cxt.c~:int action_update_client(actionState *action_state, packetinfo *pi)
+./src/cxt.c~:    action_state->last_pkt_time = pi->pheader->ts.tv_sec;
+./src/cxt.c~:    if(pi->tcph) action_state->s_tcpFlags |= pi->tcph->t_flags;
+./src/cxt.c~:    action_state->s_total_bytes += pi->packet_bytes;
+./src/cxt.c~:    action_state->s_total_pkts += 1;
+./src/cxt.c~:    pi->action_state = action_state;
+./src/cxt.c~:    if(!action_state->c_asset)
+./src/cxt.c~:        action_state->c_asset = pi->asset; // connection client asset
+./src/cxt.c~:    if (action_state->s_total_bytes > MAX_BYTE_CHECK
+./src/cxt.c~:        || action_state->s_total_pkts > MAX_PKT_CHECK) {
+./src/cxt.c~:    //printf("action------SC_CLIENT ----------------------------\n");
+./src/cxt.c~:    //showActionState(action_state);
+./src/cxt.c~:int action_update_server(actionState *action_state, packetinfo *pi)
+./src/cxt.c~:    action_state->last_pkt_time = pi->pheader->ts.tv_sec;
+./src/cxt.c~:    if(pi->tcph) action_state->d_tcpFlags |= pi->tcph->t_flags;
+./src/cxt.c~:    action_state->d_total_bytes += pi->packet_bytes;
+./src/cxt.c~:    action_state->d_total_pkts += 1;
+./src/cxt.c~:    pi->action_state = action_state;
+./src/cxt.c~:    if(!action_state->s_asset)
+./src/cxt.c~:        action_state->s_asset = pi->asset; // server asset
+./src/cxt.c~:    if (action_state->d_total_bytes > MAX_BYTE_CHECK
+./src/cxt.c~:        || action_state->d_total_pkts > MAX_PKT_CHECK) {
+./src/cxt.c~:    //printf("action------SC_SERVER ----------------------------\n");
+./src/cxt.c~:    //showActionState(action_state);
+./src/cxt.c~:int action_cx_track(packetinfo *pi) {
+./src/cxt.c~:    actionState *action_state = NULL;
+./src/cxt.c~:    actionState *head = NULL;
+./src/cxt.c~:    action_state = action_bucket[hash];
+./src/cxt.c~:    head = action_state;
+./src/cxt.c~:    while (action_state != NULL) {
+./src/cxt.c~:        cxid = action_state->cxid;
+./src/cxt.c~:	    /*printf("action-----action_state cxid: %lu\n",cxid);
+./src/cxt.c~:            printf("action-----packet cxid: %lu\n",pi->cxid);
+./src/cxt.c~:		printf("action----packet is from SC_SERVER\n");
+./src/cxt.c~:		printf("action----packet is from SC_CLIENT\n");
+./src/cxt.c~:                //printf("action---find the number SC-CLIENT, cxid: %lu\n",pi->cxid);
+./src/cxt.c~:                return action_update_client(action_state, pi);
+./src/cxt.c~:		//printf("action---find the number SC-SERVER, cxid: %lu\n",pi->cxid);
+./src/cxt.c~:                return action_update_server(action_state, pi);
+./src/cxt.c~:                return action_update_client(action_state, pi);
+./src/cxt.c~:                return action_update_server(action_state, pi);
+./src/cxt.c~:        action_state = action_state->next;
+./src/cxt.c~:    action_state = action_cxt_new(pi);
+./src/cxt.c~:    action_state->next = head;
+./src/cxt.c~:        head->prev = action_state;
+./src/cxt.c~:    action_bucket[hash] = action_state;
+./src/cxt.c~:    pi->action_state = action_state;
+./src/cxt.c~:void reverse_pi_conn_action(packetinfo *pi)
+./src/cxt.c~:    actionState *action_state;
+./src/cxt.c~:    action_state = pi->action_state;
+./src/cxt.c~:    tmpFlags = action_state->s_tcpFlags;
+./src/cxt.c~:    tmp_pkts = action_state->s_total_pkts;
+./src/cxt.c~:    tmp_bytes = action_state->s_total_bytes;
+./src/cxt.c~:    action_state->s_tcpFlags = action_state->d_tcpFlags;
+./src/cxt.c~:    action_state->s_total_pkts = action_state->d_total_pkts;
+./src/cxt.c~:    action_state->s_total_bytes = action_state->d_total_bytes;
+./src/cxt.c~:    action_state->d_tcpFlags = tmpFlags; 
+./src/cxt.c~:    action_state->d_total_pkts = tmp_pkts;
+./src/cxt.c~:    action_state->d_total_bytes = tmp_bytes;
+./src/cxt.c~:    action_state->c_asset = action_state->s_asset = NULL;
+./src/cxt.c~:    action_state->check = 0x00;
+./src/cxt.c~:    actionState *action_state;
+./src/cxt.c~:        action_state = action_bucket[iter];
+./src/cxt.c~:        while (action_state != NULL) {
+./src/cxt.c~:                if (action_state->s_tcpFlags & TF_FIN && action_state->d_tcpFlags & TF_FIN
+./src/cxt.c~:                    && (check_time - action_state->last_pkt_time) > 5) {
+./src/cxt.c~:                else if ((action_state->s_tcpFlags & TF_RST
+./src/cxt.c~:                          || action_state->d_tcpFlags & TF_RST)
+./src/cxt.c~:                          && (check_time - action_state->last_pkt_time) > 5) {
+./src/cxt.c~:                else if ((check_time - action_state->last_pkt_time) > TCP_TIMEOUT) {
+./src/cxt.c~:                     && (check_time - action_state->last_pkt_time) > 60) {
+./src/cxt.c~:                if ((check_time - action_state->last_pkt_time) > 60) {
+./src/cxt.c~:            else if ((check_time - action_state->last_pkt_time) > TCP_TIMEOUT) {
+./src/cxt.c~:		if(conn_state->cxid == action_state->cxid){
+./src/cxt.c~:                if (action_state->prev)
+./src/cxt.c~:                    action_state->prev->next = action_state->next;
+./src/cxt.c~:                if (action_state->next)
+./src/cxt.c~:                    action_state->next->prev = action_state->prev;
+./src/cxt.c~:                actionState *tmp = action_state;
+./src/cxt.c~:                action_state = action_state->prev;
+./src/cxt.c~:                del_action_state(tmp, &action_bucket[iter]);
+./src/cxt.c~:                if (action_state == NULL) {
+./src/cxt.c~:                    action_bucket[iter] = NULL;
+./src/cxt.c~:                action_state = action_state->prev;
+./src/cxt.c~:void del_action_state(actionState * action_state, actionState ** bucket_ptr)
+./src/cxt.c~:    actionState *prev = action_state->prev;       /* OLDER connections */
+./src/cxt.c~:    actionState *next = action_state->next;       /* NEWER connections */
+./src/cxt.c~:    free(action_state);
+./src/cxt.c~:    action_state = NULL;
+./src/cxt.h~:int action_cx_track(packetinfo *pi);
+./src/cxt.h~:void del_action_state(actionState * action_state, actionState ** bucket_ptr);
+./src/cxt.h~:int action_tracking(packetinfo *pi);
+./src/cxt.h~:void reverse_pi_conn_action(packetinfo *pi);
+./src/cxt.h~:extern actionState *action_bucket[BUCKET_SIZE];
+./src/prads.c~:    action_tracking(pi);
+./src/prads.c~:		   reverse_pi_conn_action(pi);
+./src/prads.c~:    action_tracking(pi);
+./src/prads.c~:    action_tracking(pi);
+./src/prads.c~:        if (pi->action_state->check == 0x00) {
+./src/prads.c~:            pi->action_state->check = 0x10; //for now - stop icmp fp quick
+./src/prads.c~:        if (pi->action_state->check == 0x00) {
+./src/prads.c~:            pi->action_state->check = 0x10; //for now - stop icmp fp quick
+./src/prads.c~:    action_tracking(pi);
+./src/prads.c~:    if (pi->action_state->check == 0x00) {
+./src/prads.c~:            pi->action_state->check = 0x01; // no more checks
+./src/prads.c~:    //locals.action_get_perflow = &local_action_get_perflow;
+./src/prads.c~:    //locals.action_put_perflow = &local_action_put_perflow;
+./src/local.h~:int local_action_get_perflow();
+./src/local.h~:int local_action_put_perflow(ActionState* recv_state);
+./src/prads.h~:typedef struct _actionState {
+./src/prads.h~:    struct   _actionState *prev;
+./src/prads.h~:    struct   _actionState *next;
+./src/prads.h~:} actionState;
+./src/prads.h~:#define ACTION_ISSET_CXT_DONT_CHECK_CLIENT(pi)  (pi->action_state->check & CXT_DONT_CHECK_CLIENT)
+./src/prads.h~:#define ACTION_ISSET_CXT_DONT_CHECK_SERVER(pi)  (pi->action_state->check & CXT_DONT_CHECK_SERVER)
+./src/prads.h~:#define ACTION_ISSET_DONT_CHECK_SERVICE(pi)     (pi->action_state->check & CXT_SERVICE_DONT_CHECK)
+./src/prads.h~:#define ACTION_ISSET_DONT_CHECK_CLIENT(pi)      (pi->action_state->check & CXT_CLIENT_DONT_CHECK)
+./src/prads.h~:#define ACTION_ISSET_SERVICE_UNKNOWN(pi)        (pi->action_state->check & CXT_SERVICE_UNKNOWN_SET)
+./src/prads.h~:#define ACTION_ISSET_CLIENT_UNKNOWN(pi)         (pi->action_state->check & CXT_CLIENT_UNKNOWN_SET)
+./src/prads.h~:    actionState     *action_state;
+./src/dhcp.h:    uint32_t xid;                // transaction id (5)
+./src/prads.h:typedef struct _actionState {
+./src/prads.h:    struct   _actionState *prev;
+./src/prads.h:    struct   _actionState *next;
+./src/prads.h:} actionState;
+./src/prads.h:#define ACTION_ISSET_CXT_DONT_CHECK_CLIENT(pi)  (pi->action_state->check & CXT_DONT_CHECK_CLIENT)
+./src/prads.h:#define ACTION_ISSET_CXT_DONT_CHECK_SERVER(pi)  (pi->action_state->check & CXT_DONT_CHECK_SERVER)
+./src/prads.h:#define ACTION_ISSET_DONT_CHECK_SERVICE(pi)     (pi->action_state->check & CXT_SERVICE_DONT_CHECK)
+./src/prads.h:#define ACTION_ISSET_DONT_CHECK_CLIENT(pi)      (pi->action_state->check & CXT_CLIENT_DONT_CHECK)
+./src/prads.h:#define ACTION_ISSET_SERVICE_UNKNOWN(pi)        (pi->action_state->check & CXT_SERVICE_UNKNOWN_SET)
+./src/prads.h:#define ACTION_ISSET_CLIENT_UNKNOWN(pi)         (pi->action_state->check & CXT_CLIENT_UNKNOWN_SET)
+./src/prads.h:    actionState     *action_state;
+./src/servicefp/local.h:int local_action_get_perflow();
+./src/servicefp/local.h:int local_action_put_perflow(ActionState* recv_state);
+./src/servicefp/tcpc.c~:	    pi->action_state ->check |= CXT_CLIENT_DONT_CHECK;
+./src/servicefp/tcpc.c~:	pi->action_state ->check |= CXT_CLIENT_UNKNOWN_SET;
+./src/servicefp/tcpc.c~:	    pi->action_state ->check |= CXT_CLIENT_DONT_CHECK;
+./src/servicefp/tcpc.c~:	pi->action_state ->check |= CXT_CLIENT_UNKNOWN_SET;
+./src/servicefp/tcps.c~:	    pi->action_state ->check |= CXT_SERVICE_DONT_CHECK;
+./src/servicefp/tcps.c~:	pi->action_state ->check |= CXT_SERVICE_UNKNOWN_SET;
+./src/servicefp/tcps.c~:	    pi->action_state ->check |= CXT_SERVICE_DONT_CHECK;
+./src/servicefp/tcps.c~:	pi->action_state ->check |= CXT_SERVICE_UNKNOWN_SET;
+./src/servicefp/tcps.c:	    pi->action_state ->check |= CXT_SERVICE_DONT_CHECK;
+./src/servicefp/tcps.c:	pi->action_state ->check |= CXT_SERVICE_UNKNOWN_SET;
+./src/servicefp/tcps.c:	    pi->action_state ->check |= CXT_SERVICE_DONT_CHECK;
+./src/servicefp/tcps.c:	pi->action_state ->check |= CXT_SERVICE_UNKNOWN_SET;
+./src/servicefp/udps.c:            pi->action_state ->check |= CXT_SERVICE_DONT_CHECK;
+./src/servicefp/udps.c:            pi->action_state ->check |= CXT_CLIENT_UNKNOWN_SET;
+./src/servicefp/udps.c:            pi->action_state ->check |= CXT_CLIENT_UNKNOWN_SET;
+./src/servicefp/udps.c:            pi->action_state ->check |= CXT_SERVICE_UNKNOWN_SET;
+./src/servicefp/udps.c:            pi->action_state ->check |= CXT_SERVICE_UNKNOWN_SET;
+./src/servicefp/udps.c:            pi->action_state ->check |= CXT_SERVICE_DONT_CHECK;
+./src/servicefp/udps.c:            pi->action_state ->check |= CXT_CLIENT_UNKNOWN_SET;
+./src/servicefp/udps.c:            pi->action_state ->check |= CXT_CLIENT_UNKNOWN_SET;
+./src/servicefp/udps.c:            pi->action_state ->check |= CXT_SERVICE_UNKNOWN_SET;
+./src/servicefp/udps.c:            pi->action_state ->check |= CXT_SERVICE_UNKNOWN_SET;
+./src/servicefp/tcpc.c:	    pi->action_state ->check |= CXT_CLIENT_DONT_CHECK;
+./src/servicefp/tcpc.c:	pi->action_state ->check |= CXT_CLIENT_UNKNOWN_SET;
+./src/servicefp/tcpc.c:	    pi->action_state ->check |= CXT_CLIENT_DONT_CHECK;
+./src/servicefp/tcpc.c:	pi->action_state ->check |= CXT_CLIENT_UNKNOWN_SET;
+./src/cxt.h:int action_cx_track(packetinfo *pi);
+./src/cxt.h:void del_action_state(actionState * action_state, actionState ** bucket_ptr);
+./src/cxt.h:int action_tracking(packetinfo *pi);
+./src/cxt.h:void reverse_pi_conn_action(packetinfo *pi);
+./src/cxt.h:extern actionState *action_bucket[BUCKET_SIZE];
+./src/CONNACLocal.h~:int local_action_get_perflow();
+./src/CONNACLocal.h~:int local_action_put_perflow(ActionState* recv_state);
+./src/output-plugins/local.h:int local_action_get_perflow();
+./src/output-plugins/local.h:int local_action_put_perflow(ActionState* recv_state);
+./src/output-plugins/log_fifo.c: * begin with an action_id field.  This field will allow different types
+./src/output-plugins/log_fifo.c: * action_id        action
+Binary file ./src/prads.o matches
+./src/ipfp/local.h:int local_action_get_perflow();
+./src/ipfp/local.h:int local_action_put_perflow(ActionState* recv_state);
+./src/assets.c~:asset* action_connection_lookup(packetinfo *pi)
+./src/assets.c~:   if(NULL == pi->action_state){
+./src/assets.c~:   if (pi->sc == SC_CLIENT && pi->action_state->reversed == 0 && pi->action_state->c_asset != NULL) {
+./src/assets.c~:      return pi->action_state->c_asset;
+./src/assets.c~:   } else if (pi->sc == SC_CLIENT && pi->action_state->reversed == 1 && pi->action_state->s_asset != NULL) {
+./src/assets.c~:      return pi->action_state->s_asset;
+./src/assets.c~:   } else if (pi->sc == SC_SERVER && pi->action_state->reversed == 0 && pi->action_state->s_asset != NULL) {
+./src/assets.c~:      return pi->action_state->s_asset;
+./src/assets.c~:   } else if (pi->sc == SC_SERVER && pi->action_state->reversed == 1 && pi->action_state->c_asset != NULL) {
+./src/assets.c~:      return pi->action_state->c_asset;
+./src/assets.c~:    if (pi->asset != NULL || NULL != (pi->asset = action_connection_lookup(pi))){
+./tools/local.h:int local_action_get_perflow();
+./tools/local.h:int local_action_put_perflow(ActionState* recv_state);
+./doc/local.h:int local_action_get_perflow();
+./doc/local.h:int local_action_put_perflow(ActionState* recv_state);
+./doc/sguil-sample-output.txt:Sep 04 21:00:45 <qru>    * action_id            action

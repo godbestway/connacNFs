@@ -28,6 +28,7 @@
 #include <malloc.h>
 #endif
 
+
 #include "common.h"
 #include "prads.h"
 #include "config.h"
@@ -44,6 +45,13 @@
 //#include "output-plugins/log_init.h"
 #include "output-plugins/log.h"
 
+#include <CONNAC.h>
+#include "local.h"
+#include <pcap/pcap.h>
+#include <sys/time.h>
+
+#define _Local_H_
+
 #ifndef CONFDIR
 #define CONFDIR "/etc/prads/"
 #endif
@@ -52,7 +60,6 @@
 
 /*  G L O B A L S  *** (or candidates for refactoring, as we say)***********/
 globalconfig config;
-CONNACStatistics connac_stats;
 extern int optind, opterr, optopt; // getopt()
 
 time_t tstamp;
@@ -98,19 +105,8 @@ void udp_guess_direction(packetinfo *pi);
 void set_pkt_end_ptr (packetinfo *pi);
 inline int filter_packet(const int af, void *ip);
 
-/* F U N C T I O N S  ********************************************************/
 
-//+++
-void connac_notify_packet_received(char *type, struct timeval *recv_time)
-{
-    connac_stats.pkts_received++;
-    
-    // Output count statistics 
-    if (0 == (connac_stats.pkts_received % 10))
-    { printf("pkts_received=%d, flows_active=%d\n",
-            connac_stats.pkts_received, connac_stats.flows_active); }
-}
-//+++
+/* F U N C T I O N S  ********************************************************/
 
 
 void got_packet(u_char * useless, const struct pcap_pkthdr *pheader,
@@ -686,7 +682,7 @@ void prepare_tcp (packetinfo *pi)
 void parse_tcp (packetinfo *pi)
 {
     update_asset(pi);
-
+    //printf("parse tcp ---\n");
     if (TCP_ISFLAGSET(pi->tcph, (TF_SYN))) {
         if (!TCP_ISFLAGSET(pi->tcph, (TF_ACK))) {
             if (IS_COSET(&config,CO_SYN)) {
@@ -706,8 +702,9 @@ void parse_tcp (packetinfo *pi)
     }
 
     // Check payload for known magic bytes that defines files!
-
+    //printf("parse tcp check payload ---\n");
     if (pi->sc == SC_CLIENT && !ACTION_ISSET_CXT_DONT_CHECK_CLIENT(pi)) {
+	//printf("if 1 ---\n");
         if (IS_CSSET(&config,CS_TCP_CLIENT)
             && !ACTION_ISSET_DONT_CHECK_CLIENT(pi)) {
             if (pi->af == AF_INET)
@@ -718,6 +715,7 @@ void parse_tcp (packetinfo *pi)
         goto bastard_checks;
 
     } else if (pi->sc == SC_SERVER && !ACTION_ISSET_CXT_DONT_CHECK_SERVER(pi)) {
+	//printf("if 2 ---\n");
         if (IS_CSSET(&config,CS_TCP_SERVER)
             && !ACTION_ISSET_DONT_CHECK_SERVICE(pi)) {
             if (pi->af == AF_INET)
@@ -728,6 +726,7 @@ void parse_tcp (packetinfo *pi)
         goto bastard_checks;
     }
     vlog(0x3, "[*] - NOT CHECKING TCP PACKAGE\n");
+
     return;
 
 bastard_checks:
@@ -853,8 +852,8 @@ void parse_icmp (packetinfo *pi)
     update_asset(pi);
 
     if (IS_COSET(&config,CO_ICMP)) {
-        if (pi->cxt->check == 0x00) {
-            pi->cxt->check = 0x10; //for now - stop icmp fp quick
+        if (pi->action_state->check == 0x00) {
+            pi->action_state->check = 0x10; //for now - stop icmp fp quick
             if (pi->af==AF_INET) {
                 fp_icmp4(pi, pi->ip4, pi->icmph, pi->end_ptr);
                 // could look for icmp spesific data in package abcde...
@@ -1096,8 +1095,8 @@ void game_over()
         end_logging();
         if(!ISSET_CONFIG_QUIET(config)){
            print_prads_stats();
-	   showAllState();
-           showAllCxid();
+	   //showAllState();
+           //showAllCxid();
            if(!config.pcap_file)
                print_pcap_stats();
         }
@@ -1532,13 +1531,31 @@ int main(int argc, char *argv[])
     pcap_freecode(&cfilter);
 
     cxt_init();
-//+++
-    bzero(&connac_stats, sizeof(connac_stats));
-//+++
+
+
+    CONNACLocals locals;
+    bzero(&locals,sizeof(locals));
+    //locals.conn_get_perflow = &local_conn_get_perflow;
+    //locals.conn_put_perflow = &local_conn_put_perflow;
+    //locals.action_get_perflow = &local_action_get_perflow;
+    //locals.action_put_perflow = &local_action_put_perflow;
+
+    //connac_init(&locals);
+
+    // Conn Table Lock
+    pthread_mutex_init(&ConnEntryLock, NULL);
+
+    // Action Table Lock
+    pthread_mutex_init(&ActionEntryLock, NULL);
+
     olog("[*] Sniffing...\n");
     pcap_loop(config.handle, -1, got_packet, NULL);
 
     game_over();
     return (0);
 }
+
+
+
+
 

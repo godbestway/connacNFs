@@ -1,24 +1,24 @@
 #include <assert.h>
+#include <sys/time.h>
+#include <string.h>
 #include "common.h"
 #include "prads.h"
 #include "cxt.h"
 #include "sys_func.h"
 #include "config.h"
 #include "output-plugins/log.h"
+#include <CONNAC.h>
+#include "local.h"
 
 extern globalconfig config;
 
 uint64_t cxtrackerid;
+static pthread_t conn_thread;
 connection *bucket[BUCKET_SIZE];
+
 connState *conn_bucket[BUCKET_SIZE];
 actionState *action_bucket[BUCKET_SIZE];
 
-//+++
-void connac_notify_flow_created()
-{
-    connac_stats.flows_active++;
-}
-//+++
 
 
 void cxt_init()
@@ -26,7 +26,384 @@ void cxt_init()
     cxtrackerid = 0;
 }
 
+/*
 
+
+
+int local_conn_put_perflow(ConnState* recv_state){
+	
+    printf("receive conn state, begin to putPerFlow");
+    connState *conn_state = NULL;
+    conn_state =(connState*)malloc(sizeof(connState));
+
+    int i;
+    int m;
+    for(i =0; i< 6;i++){
+	conn_state->ether_dst[i]=recv_state->ether_dst[i];
+
+    }
+    for(m =0; m< 6;i++){
+	conn_state->ether_src[m]=recv_state->ether_src[m];
+
+    }
+	
+    struct in6_addr ips;
+    struct in6_addr ipd;
+   
+    ips.s6_addr32[0] = conn_state->s_ip.s6_addr32[0];
+    ipd.s6_addr32[0] = conn_state->s_ip.s6_addr32[0];
+    conn_state->s_ip = ips;
+    conn_state->d_ip = ipd;
+
+    conn_state->s_port = recv_state->s_port;
+    conn_state->d_port = recv_state->d_port;
+
+    uint64_t cxid = recv_state->cxid;
+    conn_state->cxid = cxid;
+   
+    if(cxid > cxtrackerid){
+	cxtrackerid = cxid;
+    }
+   
+    uint32_t hash = recv_state->hash;
+    conn_state->hash = hash;
+   
+    pthread_mutex_lock(&ConnEntryLock);
+
+    connState* head = NULL;
+    head = conn_bucket[hash];
+
+
+    // Add to linked list
+    conn_state->prev = NULL;
+    if (head != NULL)
+    {
+        head->prev = conn_state;
+        conn_state->next = head;
+    }
+    else
+    { conn_state->next = NULL; }
+    conn_bucket[hash] = conn_state;
+    pthread_mutex_unlock(&ConnEntryLock);
+  
+  return 1;
+
+}
+
+
+int local_action_put_perflow(ActionState* recv_state){
+	
+    printf("receive action state, begin to putPerFlow");
+    actionState *action_state = NULL;
+    action_state =(actionState*)malloc(sizeof(actionState));
+
+
+    action_state->start_time = recv_state->start_time;
+    action_state->last_pkt_time = recv_state->last_pkt_time;
+    action_state->cxid = recv_state->cxid;
+    action_state->reversed = recv_state->reversed;
+    action_state->af = recv_state->af;
+    action_state->hw_proto = recv_state->hw_proto;
+    action_state->proto = recv_state->proto;
+    action_state->s_total_pkts = recv_state->s_total_pkts;
+    action_state->s_total_bytes= recv_state->s_total_bytes;
+    action_state->d_total_pkts = recv_state->d_total_pkts;
+    action_state->d_total_bytes = recv_state->d_total_bytes;
+    action_state->s_tcpFlags = recv_state->s_tcpflags;
+    action_state->__pad__ = recv_state->pad;
+    action_state->d_tcpFlags = recv_state->d_tcpflags;  
+    action_state->check = recv_state->check;
+	
+    uint32_t hash = recv_state->hash;
+    action_state->hash = hash;
+
+   
+    pthread_mutex_lock(&ActionEntryLock);
+
+    actionState* head = NULL;
+    head = action_bucket[hash];
+
+
+    // Add to linked list
+    action_state->prev = NULL;
+    if (head != NULL)
+    {
+        head->prev = action_state;
+        action_state->next = head;
+    }
+    else
+    { action_state->next = NULL; }
+    action_bucket[hash] = action_state;
+    pthread_mutex_unlock(&ActionEntryLock);
+  
+  return 1;
+
+}
+*/
+
+
+/*
+int local_conn_get_perflow(Key key){
+    
+     printf("local  key.dl_type %x\n", key.dl_type);
+     printf("key.nw_proto %u\n",key.nw_proto);
+ 
+    int count = 0;
+    int h = 0;
+    for (h = 0; h < BUCKET_SIZE; h++)
+    {        
+        pthread_mutex_lock(&ConnEntryLock);
+        connState *conn_state = conn_bucket[h];
+        while (conn_state != NULL)
+        {
+		printf("local key.wildcards & WILDCARD_DL_TYPE %d\n", key.wildcards & WILDCARD_DL_TYPE);
+		printf("local key.wildcards & WILDCARD_NW_PROTO %d\n", key.wildcards & WILDCARD_NW_PROTO);
+		printf("localconn_head[i]->hw_proto %u\n", conn_state->hw_proto);
+		printf("localconn_head[i]->hw_proto %u\n",ntohs(key.dl_type));
+		printf("ntohs(key.dl_type) %x\n", conn_state->proto);
+		if (!(key.wildcards & WILDCARD_DL_TYPE) && conn_state->hw_proto != ntohs(key.dl_type))
+			{
+		        	conn_state = conn_state->next;
+		                continue;
+		        }
+		
+		            // Check nw_proto
+		if ((!(key.wildcards & WILDCARD_NW_PROTO)) &&((conn_state->proto) != key.nw_proto))
+			{
+		                conn_state = conn_state->next;
+		                continue;
+		        }
+
+	    
+
+	     int err;
+	     if((err = pthread_create(&conn_thread, NULL, conn_sender, (void*)conn_state))!=0)
+             {
+             	perror("pthread_create error");
+             }
+	     count++;
+
+	
+	        
+           // Move on to next connection
+           conn_state = conn_state->next;
+        }
+        pthread_mutex_unlock(&ConnEntryLock);
+    }
+    return count;
+
+}
+
+int local_conn_get_one_perflow(connState* conn_state){
+
+		
+	ConnState* conn_perflow = (ConnState*)malloc(sizeof(ConnState));
+	conn_state__init(conn_perflow);
+
+
+        conn_perflow->n_ether_dst = 6;
+        conn_perflow->ether_dst = malloc(sizeof(uint32_t)*6);
+
+        int m;
+	int n;
+
+	for(m = 0; m < 6; m++){
+		conn_perflow->ether_dst[m]=conn_state->ether_dst[m];
+	}
+   
+
+ 	conn_perflow->n_ether_src = 6;
+        conn_perflow->ether_src = malloc(sizeof(uint32_t)*6);
+
+	for(n = 0; n < 6; n++){
+		conn_perflow->ether_src[n]=conn_state->ether_src[n];
+	}
+
+	conn_perflow->has_s_ip = 1;
+	conn_perflow->s_ip = conn_state->s_ip.s6_addr32[0];
+	conn_perflow->has_d_ip = 1;
+	conn_perflow->d_ip = conn_state->s_ip.s6_addr32[0];
+	conn_perflow->has_s_port = 1;
+        conn_perflow->s_port = conn_state->s_port;
+	conn_perflow->has_d_port = 1;
+	conn_perflow->d_port = conn_state->d_port;
+	conn_perflow->has_hw_proto=1;
+	conn_perflow->hw_proto = conn_state->hw_proto;
+	conn_perflow->has_proto=1;
+	conn_perflow->proto = conn_state->proto;
+	int hash = conn_state->hash;			
+	conn_perflow->has_hash=1;
+	conn_perflow->hash = hash;
+	int cxid = conn_state->cxid;
+	conn_perflow->has_cxid=1;
+	conn_perflow->cxid = cxid;
+
+        MyConnMessage mes;
+        my_conn_message__init(&mes);
+   
+        mes.data_type = MY_CONN_MESSAGE__DATA_TYPE__ConnStateType;
+        mes.message_case = MY_CONN_MESSAGE__MESSAGE_CONN_STATE;
+        mes.connstate =conn_perflow;
+ 
+        int len = my_conn_message__get_packed_size(&mes);
+        printf("size of Perflow : %u\n", len);
+        void *buf = malloc(len);
+        my_conn_message__pack(&mes, buf);
+
+	int result = conn_send_perflow(buf, len);    
+       	if(result < 0){
+			return -1;
+	}
+			
+}
+
+
+static void *conn_sender(void *arg){
+	
+	connState* conn_state = (connState*)arg;
+	int send_conn = local_conn_get_one_perflow(conn_state);
+	if(send_conn < 0){
+		printf("send failed");
+	}
+	free(conn_state);
+	
+}
+
+static void *action_sender(void *arg){
+
+	//pthread_mutex_lock(&ActionOneEntryLock);
+	Match *match = (Match*)arg;
+	int hash = match->hash;
+ 	int cxid = match->cxid;
+	
+	//printf("local_get_action hash %d\n", hash);
+	//printf("local_get_action cxid %d\n", cxid);
+	int send_action = local_action_get_one_perflow(hash-1,cxid);
+	if(send_action < 0){
+		printf("send failed");
+	}
+	free(match);
+	//pthread_mutex_unlock(&ActionOneEntryLock);
+
+
+}
+
+
+
+ProtoObject* proto_compose_action_perflow_message(actionState *action_state){
+	ActionState action_perflow = ACTION_STATE__INIT;
+        
+        long start_time = action_state->start_time;
+        action_perflow.start_time = start_time;
+	long last_pkt_time =action_state->last_pkt_time;
+	action_perflow.last_pkt_time = last_pkt_time;
+	action_perflow.cxid = action_state->cxid;
+	action_perflow.reversed = action_state->reversed;
+	action_perflow.af = action_state->af;
+	action_perflow.hw_proto = action_state->hw_proto;
+	action_perflow.proto = action_state->proto;
+	action_perflow.s_total_pkts = action_state->s_total_pkts;
+	action_perflow.s_total_bytes = action_state->s_total_bytes;
+	action_perflow.d_total_pkts = action_state->d_total_pkts;
+	action_perflow.d_total_bytes = action_state->d_total_bytes;
+	action_perflow.s_tcpflags = action_state->s_tcpFlags;
+	action_perflow.pad = action_state->__pad__;
+	action_perflow.d_tcpflags = action_state-> d_tcpFlags;
+	action_perflow.check = action_state->check;
+	action_perflow.hash = action_state->hash;
+ 
+    	
+    	//check info length  
+    	unsigned int len;
+    	len = action_state__get_packed_size(&action_perflow);
+    	printf("send size of action_perflow : %u\n", len);
+ 
+    	//use length to malloc a space, check pb-c.h to know the buf pointer type
+    	//here is uint8_t  buf   
+    	uint8_t * buf = NULL;
+    	buf = (uint8_t*)malloc(len);
+    	action_state__pack(&action_perflow, buf);
+	
+	ProtoObject *perflow_object;
+    	perflow_object = (ProtoObject *)malloc(sizeof(ProtoObject));	
+	
+	//printf("message %d\n",message_type);
+	perflow_object->length = len;
+	perflow_object->buf = buf;
+	perflow_object->message_type=PROTO_ACTIONPERFLOW;
+	
+	
+	return perflow_object;
+	
+
+}
+
+int local_action_get_one_perflow(int hash, int cxid){
+        printf("local get one action per flow\n");	
+
+	pthread_mutex_lock(&ActionEntryLock);
+	actionState *action_state = action_bucket[h];
+	while(action_state != NULL){
+		if(action_state->cxid != cxid){
+			//printf("get one action cxid middle %d\n",head->cxid);
+			head = head->next;
+			continue;
+		}
+		//printf("get one action hash %d\n",hash);
+		//printf("get one action cxid %d\n",cxid);
+
+		ActionState action_perflow;
+		action_state__init(&aaction_perflow);
+
+
+        
+        	long start_time = action_state->start_time;
+        	action_perflow->start_time = start_time;
+		long last_pkt_time =action_state->last_pkt_time;
+		action_perflow->last_pkt_time = last_pkt_time;
+		action_perflow->cxid = action_state->cxid;
+		action_perflow->reversed = action_state->reversed;
+		action_perflow->af = action_state->af;
+		//action_perflow->hw_proto = action_state->hw_proto;
+		//action_perflow->proto = action_state->proto;
+		action_perflow->s_total_pkts = action_state->s_total_pkts;
+		action_perflow->s_total_bytes = action_state->s_total_bytes;
+		action_perflow->d_total_pkts = action_state->d_total_pkts;
+		action_perflow->d_total_bytes = action_state->d_total_bytes;
+		action_perflow->s_tcpflags = action_state->s_tcpFlags;
+		action_perflow->pad = action_state->__pad__;
+		action_perflow->d_tcpflags = action_state-> d_tcpFlags;
+		action_perflow->check = action_state->check;
+		action_perflow->hash = action_state->hash;
+
+			
+
+        	actionstate.has_data=1;
+		
+		MyActionMessage mes;
+        	my_action_message__init(&mes);
+   
+        	mes.data_type = MY_ACTION_MESSAGE__DATA_TYPE__ActionStateType;
+        	mes.message_case = MY_ACTION_MESSAGE__MESSAGE_ACTION_STATE;
+        	mes.actionstate = &actionstate;
+ 
+        	int len = my_action_message__get_packed_size(&mes);
+        	printf("size of Perflow : %u\n", len);
+        	void *buf = malloc(len);
+        	my_action_message__pack(&mes, buf);
+
+		int result = action_send_perflow(buf, len);    
+       		 if(result < 0){
+			return -1;
+		}
+		
+		
+	}
+	//printf("action end----------------------\n");
+	pthread_mutex_unlock(&ActionEntryLock);
+	return 1;
+}
+*/
 
 //+++
 void showConnState(connState* conn_state){
@@ -63,7 +440,9 @@ void showConnState(connState* conn_state){
     printf("s_port %u\n",conn_state->s_port);
     printf("d_port %u\n",conn_state->d_port);
     printf("cxid  %lu\n",conn_state->cxid);
-    printf("reversed %u\n",conn_state->reversed);
+    printf("hash  %u\n",conn_state->hash);
+    printf("hw_proto %u\n",conn_state->hw_proto);
+    printf("proto %u\n",conn_state->proto);
     printf("---------------ConnState------------------\n");
 
 }
@@ -98,7 +477,6 @@ void showConnection(connection* cxt){
     printf("reversed %u\n",cxt->reversed);
     printf("start_time %lu\n",cxt->start_time );
     printf("last_pkt_time %lu\n", cxt->last_pkt_time);
-    printf("reversed: %u\n",cxt->reversed);
     printf("af %u\n",cxt->af);
     printf("hw_proto %u\n",cxt->hw_proto);
     printf("proto %u\n",cxt->proto);
@@ -125,8 +503,8 @@ void showActionState(actionState* action_state){
     printf("cxid: %lu\n",action_state->cxid);
     printf("reversed: %u\n",action_state->reversed);
     printf("af %u\n",action_state->af);
-    printf("hw_proto %u\n",action_state->hw_proto);
-    printf("proto %u\n",action_state->proto);
+    //printf("hw_proto %u\n",action_state->hw_proto);
+    //printf("proto %u\n",action_state->proto);
     printf("s_total_pkts  %lu\n",action_state->s_total_pkts);
     printf("s_total_bytes %lu\n",action_state->s_total_bytes);
     printf("d_total_pkts %lu\n",action_state->d_total_pkts);
@@ -134,6 +512,7 @@ void showActionState(actionState* action_state){
     printf("s_tcpFlags %u\n",action_state->s_tcpFlags);
     printf("d_tcpFlags  %u\n",action_state->d_tcpFlags);
     printf("check %u\n",action_state->check);
+    printf("hash  %u\n",action_state->hash);
     printf("---------------actionState------------------\n");
 
 }
@@ -302,7 +681,13 @@ connState *conn_cxt_new(packetinfo *pi){
 
     conn_state->s_port = pi->s_port;
     conn_state->d_port = pi->d_port;
+    conn_state->proto = pi->proto;
+    conn_state->hw_proto = ntohs(pi->eth_type);
+    
+
+    conn_state->hash = pi->hash;
     pi->cxid = cxtrackerid;
+    
 
     
     //uint8_t *ether_dst = (uint8_t*)malloc(6);
@@ -322,8 +707,6 @@ connState *conn_cxt_new(packetinfo *pi){
     conn_state->ether_src[4] = pi->eth_hdr->ether_src[4];        /* src MAC */
     conn_state->ether_src[5] = pi->eth_hdr->ether_src[5];        /* src MAC */
 
-    
-    conn_state->reversed = 0;
 
     //showConnState(conn_state);
 
@@ -340,11 +723,13 @@ actionState *action_cxt_new(packetinfo *pi)
 {
 
 
+    printf("create a new action");
     actionState *action_state;
     
     action_state = (actionState *) calloc(1, sizeof(actionState));
     assert(action_state);
     action_state->cxid = cxtrackerid;
+    action_state->hash = pi->hash;
 //+++
     //connac_notify_flow_created();
 //+++
@@ -356,16 +741,14 @@ actionState *action_cxt_new(packetinfo *pi)
     action_state->s_total_pkts = 1;
     action_state->start_time = pi->pheader->ts.tv_sec;
     action_state->last_pkt_time = pi->pheader->ts.tv_sec; 
-   
-    action_state->proto = pi->proto;
-    action_state->hw_proto = ntohs(pi->eth_type);
-
     action_state->check = 0x00;
     action_state->c_asset = NULL;
     action_state->s_asset = NULL;
     action_state->reversed = 0;
 
-   
+
+    //action_state->proto = pi->proto;
+    //action_state->hw_proto = ntohs(pi->eth_type); 
     //showActionState(action_state);
      
     
@@ -982,7 +1365,7 @@ void end_connac_sessions()
         while (action_state != NULL) {
             curcxt++;
             /* TCP */
-            if (action_state->proto == IP_PROTO_TCP) {
+            if (conn_state->proto == IP_PROTO_TCP) {
                 /* * FIN from both sides */
                 if (action_state->s_tcpFlags & TF_FIN && action_state->d_tcpFlags & TF_FIN
                     && (check_time - action_state->last_pkt_time) > 5) {
@@ -998,13 +1381,13 @@ void end_connac_sessions()
                 }
             }
             /* UDP */
-            else if (action_state->proto == IP_PROTO_UDP
+            else if (conn_state->proto == IP_PROTO_UDP
                      && (check_time - action_state->last_pkt_time) > 60) {
                 cxstatus = CX_EXPIRE;
             }
             /* ICMP */
-            else if (action_state->proto == IP_PROTO_ICMP
-                     || action_state->proto == IP6_PROTO_ICMP) {
+            else if (conn_state->proto == IP_PROTO_ICMP
+                     || conn_state->proto == IP6_PROTO_ICMP) {
                 if ((check_time - action_state->last_pkt_time) > 60) {
                     cxstatus = CX_EXPIRE;
                 }
@@ -1096,7 +1479,7 @@ void del_conn_state(connState * conn_state, connState ** bucket_ptr)
         prev->next = next;
         next->prev = prev;
     }
-
+    connac_notify_flow_destroyed();
     /*
      * Free and set to NULL 
      */
@@ -1255,8 +1638,7 @@ inline void cx_track_simd_ipv4(packetinfo *pi)
         pi->ip_dst.__u6_addr.__u6_addr32[0],
         pi->s_port,
         pi->d_port);
-    while (cxt != NULL) {
-        VEC_FILL(compare,
+    while (cxt != NULL   
         cxt->s_ip.__u6_addr.__u6_addr32[0],
         cxt->d_ip.__u6_addr.__u6_addr32[0],
         cxt->s_port,
@@ -1280,7 +1662,7 @@ inline void cx_track_simd_ipv4(packetinfo *pi)
         cxt->d_ip.__u6_addr.__u6_addr32[0],
         cxt->s_ip.__u6_addr.__u6_addr32[0],
         cxt->d_port,
-        cxt->s_port);
+        cxt->s_port); 
 
         compare.v = __builtin_ia32_pcmpeqd128(incoming.v,compare.v);
         if(!(compare.i[0] & compare.i[1])){
@@ -1305,5 +1687,7 @@ inline void cx_track_simd_ipv4(packetinfo *pi)
     printf("[*] Error in session tracking...\n");
     exit (1);
 }
+
+
 
 #endif

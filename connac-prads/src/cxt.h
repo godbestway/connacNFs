@@ -47,4 +47,10 @@ void reverse_pi_conn_action(packetinfo *pi);
 void showAllCxid();
 void showAllState();
 
+extern uint64_t cxtrackerid;
+extern actionState *action_bucket[BUCKET_SIZE];
+
+extern connState *conn_bucket[BUCKET_SIZE];
+
+
 #endif // CXT_H

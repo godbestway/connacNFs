@@ -1,0 +1,88 @@
+./src/prads.c:    pi->proto = IP_PROTO_GRE;
+./src/prads.c:    pi->proto  = IP_PROTO_TCP;
+./src/prads.c:    pi->proto  = IP_PROTO_UDP;
+./src/prads.c:        pi->proto  = IP_PROTO_ICMP;
+./src/prads.c:        pi->proto  = IP6_PROTO_ICMP;
+./src/assets.c:        if (port == tmp_sa->port && pi->proto == tmp_sa->proto) {
+./src/assets.c:        update_service_stats(pi->sc, pi->proto);
+./src/assets.c:        new_sa->proto = pi->proto;
+./src/cxt.c:    action_state->proto = recv_state->proto;
+./src/cxt.c:		printf("ntohs(key.dl_type) %x\n", conn_state->proto);
+./src/cxt.c:		if ((!(key.wildcards & WILDCARD_NW_PROTO)) &&((conn_state->proto) != key.nw_proto))
+./src/cxt.c:	conn_perflow->proto = conn_state->proto;
+./src/cxt.c:	action_perflow.proto = action_state->proto;
+./src/cxt.c:		//action_perflow->proto = action_state->proto;
+./src/cxt.c:    printf("proto %u\n",conn_state->proto);
+./src/cxt.c:    printf("proto %u\n",cxt->proto);
+./src/cxt.c:    //printf("proto %u\n",action_state->proto);
+./src/cxt.c:    conn_state->proto = pi->proto;
+./src/cxt.c:    action_state->proto = pi->proto;
+./src/cxt.c:    cxt->proto = pi->proto;
+./src/cxt.c:        hash = CXT_HASH4(IP4ADDR(ip_src),IP4ADDR(ip_dst),src_port,dst_port,pi->proto);
+./src/cxt.c:        hash = CXT_HASH6(ip_src,ip_dst,src_port,dst_port,pi->proto);
+./src/cxt.c:        hash = CXT_HASH4(IP4ADDR(ip_src),IP4ADDR(ip_dst),src_port,dst_port,pi->proto);
+./src/cxt.c:        hash = CXT_HASH6(ip_src,ip_dst,src_port,dst_port,pi->proto);
+./src/cxt.c:            if (cxt->proto == IP_PROTO_TCP) {
+./src/cxt.c:            else if (cxt->proto == IP_PROTO_UDP
+./src/cxt.c:            else if (cxt->proto == IP_PROTO_ICMP
+./src/cxt.c:                     || cxt->proto == IP6_PROTO_ICMP) {
+./src/cxt.c:            if (conn_state->proto == IP_PROTO_TCP) {
+./src/cxt.c:            else if (conn_state->proto == IP_PROTO_UDP
+./src/cxt.c:            else if (conn_state->proto == IP_PROTO_ICMP
+./src/cxt.c:                     || conn_state->proto == IP6_PROTO_ICMP) {
+./src/cxt.c~:    action_state->proto = recv_state->proto;
+./src/cxt.c~:		printf("ntohs(key.dl_type) %x\n", conn_state->proto);
+./src/cxt.c~:		if ((!(key.wildcards & WILDCARD_NW_PROTO)) &&((conn_state->proto) != key.nw_proto))
+./src/cxt.c~:	conn_perflow->proto = conn_state->proto;
+./src/cxt.c~:	action_perflow.proto = action_state->proto;
+./src/cxt.c~:		//action_perflow->proto = action_state->proto;
+./src/cxt.c~:    printf("proto %u\n",conn_state->proto);
+./src/cxt.c~:    printf("proto %u\n",cxt->proto);
+./src/cxt.c~:    //printf("proto %u\n",action_state->proto);
+./src/cxt.c~:    conn_state->proto = pi->proto;
+./src/cxt.c~:    action_state->proto = pi->proto;
+./src/cxt.c~:    cxt->proto = pi->proto;
+./src/cxt.c~:        hash = CXT_HASH4(IP4ADDR(ip_src),IP4ADDR(ip_dst),src_port,dst_port,pi->proto);
+./src/cxt.c~:        hash = CXT_HASH6(ip_src,ip_dst,src_port,dst_port,pi->proto);
+./src/cxt.c~:        hash = CXT_HASH4(IP4ADDR(ip_src),IP4ADDR(ip_dst),src_port,dst_port,pi->proto);
+./src/cxt.c~:        hash = CXT_HASH6(ip_src,ip_dst,src_port,dst_port,pi->proto);
+./src/cxt.c~:            if (cxt->proto == IP_PROTO_TCP) {
+./src/cxt.c~:            else if (cxt->proto == IP_PROTO_UDP
+./src/cxt.c~:            else if (cxt->proto == IP_PROTO_ICMP
+./src/cxt.c~:                     || cxt->proto == IP6_PROTO_ICMP) {
+./src/cxt.c~:            if (conn_state->proto == IP_PROTO_TCP) {
+./src/cxt.c~:            else if (conn_state->proto == IP_PROTO_UDP
+./src/cxt.c~:            else if (conn_state->proto == IP_PROTO_ICMP
+./src/cxt.c~:                     || conn_state->proto == IP6_PROTO_ICMP) {
+./src/prads.c~:    pi->proto = IP_PROTO_GRE;
+./src/prads.c~:    pi->proto  = IP_PROTO_TCP;
+./src/prads.c~:    pi->proto  = IP_PROTO_UDP;
+./src/prads.c~:        pi->proto  = IP_PROTO_ICMP;
+./src/prads.c~:        pi->proto  = IP6_PROTO_ICMP;
+./src/prads.h~:    (cxt)->proto = 0; \
+./src/prads.h:    (cxt)->proto = 0; \
+./src/servicefp/servicefp.c:        services[port]->proto |= 0x01; // TCP
+./src/servicefp/servicefp.c:        services[port]->proto |= 0x02; // UDP
+./src/servicefp/servicefp.c:    if (proto == IP_PROTO_TCP && services[port]->proto & 0x01) 
+./src/servicefp/servicefp.c:    if (proto == IP_PROTO_UDP && services[port]->proto & 0x02) 
+./src/output-plugins/log_stdout.c:        ntohs(service->port),service->proto);
+./src/output-plugins/log_stdout.c:        ntohs(service->port),service->proto);
+./src/output-plugins/log_stdout.c:            cxt->proto);
+./src/output-plugins/log_file.c:            ntohs(service->port),service->proto);
+./src/output-plugins/log_file.c:            //ntohs(main->port),service->proto);
+./src/output-plugins/log_ringbuffer.c:        cxt->proto,
+./src/output-plugins/log_sguil.c:            cxt->proto);
+./src/output-plugins/log_fifo.c:            ntohs(cxt->s_port), ntohs(cxt->d_port), service->proto, 
+./src/assets.c~:        if (port == tmp_sa->port && pi->proto == tmp_sa->proto) {
+./src/assets.c~:        update_service_stats(pi->sc, pi->proto);
+./src/assets.c~:        new_sa->proto = pi->proto;
+./action_result.txt:./src/cxt.c:    action_state->proto = recv_state->proto;
+./action_result.txt:./src/cxt.c:	action_perflow.proto = action_state->proto;
+./action_result.txt:./src/cxt.c:		//action_perflow->proto = action_state->proto;
+./action_result.txt:./src/cxt.c:    //printf("proto %u\n",action_state->proto);
+./action_result.txt:./src/cxt.c:    //action_state->proto = pi->proto;
+./action_result.txt:./src/cxt.c~:    action_state->proto = recv_state->proto;
+./action_result.txt:./src/cxt.c~:	action_perflow.proto = action_state->proto;
+./action_result.txt:./src/cxt.c~:		//action_perflow->proto = action_state->proto;
+./action_result.txt:./src/cxt.c~:    //printf("proto %u\n",action_state->proto);
+./action_result.txt:./src/cxt.c~:    //action_state->proto = pi->proto;

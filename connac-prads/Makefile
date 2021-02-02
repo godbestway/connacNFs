@@ -1,9 +1,16 @@
+ifeq (${PREFIX},)
 PREFIX=/usr/local
+endif
 BINDIR=${PREFIX}/bin
 CONFDIR=${PREFIX}/etc/prads
 MANDIR=${PREFIX}/share/man/man1
 DOCUTIL=rst2man
+ifeq (${INSTALLUSER},)
+INSTALLUSER=root
+endif
+ifeq (${INSTALLGROUP},)
 INSTALLGROUP=root
+endif
 
 ifeq ($(UNAME), FreeBSD)
 DOCUTIL=rst2man.py
@@ -33,42 +40,42 @@ doc/%.1: doc/%.man
 install: man
 	# binaries
 	install -d ${DESTDIR}${BINDIR}
-	install -m 755 -o root -g ${INSTALLGROUP} src/prads ${DESTDIR}${BINDIR}/prads
-	install -m 755 -o root -g ${INSTALLGROUP} tools/prads-asset-report ${DESTDIR}${BINDIR}/prads-asset-report
-	install -m 755 -o root -g ${INSTALLGROUP} tools/prads2snort ${DESTDIR}${BINDIR}/prads2snort
+	install -m 755 -o ${INSTALLUSER} -g ${INSTALLGROUP} src/prads ${DESTDIR}${BINDIR}/prads
+	install -m 755 -o ${INSTALLUSER} -g ${INSTALLGROUP} tools/prads-asset-report ${DESTDIR}${BINDIR}/prads-asset-report
+	install -m 755 -o ${INSTALLUSER} -g ${INSTALLGROUP} tools/prads2snort ${DESTDIR}${BINDIR}/prads2snort
 	# config
 	install -d ${DESTDIR}${CONFDIR}
-	install -C -m 644 -o root -g ${INSTALLGROUP} etc/prads.conf ${DESTDIR}${CONFDIR}/
+	install -C -m 644 -o ${INSTALLUSER} -g ${INSTALLGROUP} etc/prads.conf ${DESTDIR}${CONFDIR}/
 	# fingerprints
-	#install -m 644 -o root -g ${INSTALLGROUP} etc/osi.fp ${DESTDIR}${CONFDIR}/
-	#install -m 644 -o root -g ${INSTALLGROUP} etc/oso.fp ${DESTDIR}${CONFDIR}/
-	#install -m 644 -o root -g ${INSTALLGROUP} etc/osu.fp ${DESTDIR}${CONFDIR}/
-	install -m 644 -o root -g ${INSTALLGROUP} etc/tcp-syn.fp ${DESTDIR}${CONFDIR}/
-	install -m 644 -o root -g ${INSTALLGROUP} etc/tcp-synack.fp ${DESTDIR}${CONFDIR}/
-	install -m 644 -o root -g ${INSTALLGROUP} etc/tcp-fin.fp ${DESTDIR}${CONFDIR}/
-	install -m 644 -o root -g ${INSTALLGROUP} etc/tcp-rst.fp ${DESTDIR}${CONFDIR}/
-	install -m 644 -o root -g ${INSTALLGROUP} etc/tcp-stray-ack.fp ${DESTDIR}${CONFDIR}/
+	#install -m 644 -o ${INSTALLUSER} -g ${INSTALLGROUP} etc/osi.fp ${DESTDIR}${CONFDIR}/
+	#install -m 644 -o ${INSTALLUSER} -g ${INSTALLGROUP} etc/oso.fp ${DESTDIR}${CONFDIR}/
+	#install -m 644 -o ${INSTALLUSER} -g ${INSTALLGROUP} etc/osu.fp ${DESTDIR}${CONFDIR}/
+	install -m 644 -o ${INSTALLUSER} -g ${INSTALLGROUP} etc/tcp-syn.fp ${DESTDIR}${CONFDIR}/
+	install -m 644 -o ${INSTALLUSER} -g ${INSTALLGROUP} etc/tcp-synack.fp ${DESTDIR}${CONFDIR}/
+	install -m 644 -o ${INSTALLUSER} -g ${INSTALLGROUP} etc/tcp-fin.fp ${DESTDIR}${CONFDIR}/
+	install -m 644 -o ${INSTALLUSER} -g ${INSTALLGROUP} etc/tcp-rst.fp ${DESTDIR}${CONFDIR}/
+	install -m 644 -o ${INSTALLUSER} -g ${INSTALLGROUP} etc/tcp-stray-ack.fp ${DESTDIR}${CONFDIR}/
 	# signatures
-	install -C -m 644 -o root -g ${INSTALLGROUP} etc/eth.sig ${DESTDIR}${CONFDIR}/
-	install -C -m 644 -o root -g ${INSTALLGROUP} etc/icmp-data.sig ${DESTDIR}${CONFDIR}/
-	install -C -m 644 -o root -g ${INSTALLGROUP} etc/mac.sig ${DESTDIR}${CONFDIR}/
-	install -C -m 644 -o root -g ${INSTALLGROUP} etc/mtu.sig ${DESTDIR}${CONFDIR}/
-	install -C -m 644 -o root -g ${INSTALLGROUP} etc/os.sig ${DESTDIR}${CONFDIR}/
-	install -C -m 644 -o root -g ${INSTALLGROUP} etc/tcp-clients.sig ${DESTDIR}${CONFDIR}/
-	install -C -m 644 -o root -g ${INSTALLGROUP} etc/tcp-service.sig ${DESTDIR}${CONFDIR}/
-	install -C -m 644 -o root -g ${INSTALLGROUP} etc/udp-service.sig ${DESTDIR}${CONFDIR}/
-	install -C -m 644 -o root -g ${INSTALLGROUP} etc/service-string.sig ${DESTDIR}${CONFDIR}/
-	install -C -m 644 -o root -g ${INSTALLGROUP} etc/web-application.sig ${DESTDIR}${CONFDIR}/
+	install -C -m 644 -o ${INSTALLUSER} -g ${INSTALLGROUP} etc/eth.sig ${DESTDIR}${CONFDIR}/
+	install -C -m 644 -o ${INSTALLUSER} -g ${INSTALLGROUP} etc/icmp-data.sig ${DESTDIR}${CONFDIR}/
+	install -C -m 644 -o ${INSTALLUSER} -g ${INSTALLGROUP} etc/mac.sig ${DESTDIR}${CONFDIR}/
+	install -C -m 644 -o ${INSTALLUSER} -g ${INSTALLGROUP} etc/mtu.sig ${DESTDIR}${CONFDIR}/
+	install -C -m 644 -o ${INSTALLUSER} -g ${INSTALLGROUP} etc/os.sig ${DESTDIR}${CONFDIR}/
+	install -C -m 644 -o ${INSTALLUSER} -g ${INSTALLGROUP} etc/tcp-clients.sig ${DESTDIR}${CONFDIR}/
+	install -C -m 644 -o ${INSTALLUSER} -g ${INSTALLGROUP} etc/tcp-service.sig ${DESTDIR}${CONFDIR}/
+	install -C -m 644 -o ${INSTALLUSER} -g ${INSTALLGROUP} etc/udp-service.sig ${DESTDIR}${CONFDIR}/
+	install -C -m 644 -o ${INSTALLUSER} -g ${INSTALLGROUP} etc/service-string.sig ${DESTDIR}${CONFDIR}/
+	install -C -m 644 -o ${INSTALLUSER} -g ${INSTALLGROUP} etc/web-application.sig ${DESTDIR}${CONFDIR}/
 	# ports 
 	install -d ${DESTDIR}${CONFDIR}
-	install -C -m 644 -o root -g ${INSTALLGROUP} etc/udp.ports ${DESTDIR}${CONFDIR}/
+	install -C -m 644 -o ${INSTALLUSER} -g ${INSTALLGROUP} etc/udp.ports ${DESTDIR}${CONFDIR}/
 	install -d ${DESTDIR}${CONFDIR}/init.d
-	install -m 755 -o root -g ${INSTALLGROUP} doc/prads.rc ${DESTDIR}${CONFDIR}/init.d/
+	install -m 755 -o ${INSTALLUSER} -g ${INSTALLGROUP} doc/prads.rc ${DESTDIR}${CONFDIR}/init.d/
 	# man pages
-	install -d ${DESTDIR}${MANDIR}
-	install -m 644 -o root -g ${INSTALLGROUP} doc/prads.1.gz ${DESTDIR}${MANDIR}/
-	install -m 644 -o root -g ${INSTALLGROUP} doc/prads-asset-report.1.gz ${DESTDIR}${MANDIR}/
-	install -m 644 -o root -g ${INSTALLGROUP} doc/prads2snort.1.gz ${DESTDIR}${MANDIR}/
+#	install -d ${DESTDIR}${MANDIR}
+#	install -m 644 -o ${INSTALLUSER} -g ${INSTALLGROUP} doc/prads.1.gz ${DESTDIR}${MANDIR}/
+#	install -m 644 -o ${INSTALLUSER} -g ${INSTALLGROUP} doc/prads-asset-report.1.gz ${DESTDIR}${MANDIR}/
+#	install -m 644 -o ${INSTALLUSER} -g ${INSTALLGROUP} doc/prads2snort.1.gz ${DESTDIR}${MANDIR}/
 
 
 .PHONY: build clean install

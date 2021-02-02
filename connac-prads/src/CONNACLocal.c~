@@ -1,0 +1,43 @@
+#include <assert.h>
+#include <sys/time.h>
+#include <string.h>
+#include "common.h"
+#include "prads.h"
+#include "cxt.h"
+#include "sys_func.h"
+#include "config.h"
+#include "output-plugins/log.h"
+#include <CONNAC.h>
+#include "CONNACLocal.h"
+
+
+int local_conn_get_perflow(){
+        
+ 
+    int count = 0;
+    int h = 0;
+    for (h = 0; h < BUCKET_SIZE; h++)
+    {        
+        pthread_mutex_lock(&ConnEntryLock);
+        connState *conn_state = conn_bucket[h];
+        while (conn_state != NULL)
+        {
+	    ProtoObject *conn_perflow_object= NULL;
+	    conn_perflow_object = proto_compose_conn_perflow_message(conn_state);	
+            int send_success = conn_send_perflow(perflow_object);
+
+    	    if(send_success < 0){
+		printf("send perflow message failed");
+	    	return -1;
+             }
+
+           free(conn_perflow_object);
+    
+           // Move on to next connection
+           conn_state = conn_state->next;
+        }
+        pthread_mutex_unlock(&ConnEntryLock);
+    }
+    return count;
+
+}
