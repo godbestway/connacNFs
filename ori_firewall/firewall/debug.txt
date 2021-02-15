@@ -1,0 +1,74 @@
+debug
+state.c
+int get_hash(struct ip_header* h_ip, struct tcp_header* h_tcp);
+    struct in6_addr ips;
+    struct in6_addr ipd;
+
+    ips.s6_addr32[0] = int32_saddr;
+    ipd.s6_addr32[0] = int32_daddr;
+
+    //struct sockaddr_in sa;
+    char src_str[INET_ADDRSTRLEN];
+
+   // now get it back and print it
+    inet_ntop(AF_INET, &(ips), src_str, INET_ADDRSTRLEN);
+   
+    //struct sockaddr_in sa;
+    char dst_str[INET_ADDRSTRLEN];
+
+   // now get it back and print it
+    inet_ntop(AF_INET, &(ipd), dst_str, INET_ADDRSTRLEN);
+    
+
+
+    printf("---------------ConnState------------------\n");
+
+    printf("src_ip %s\n", src_str);
+    printf("ds_ip %s\n", dst_str);
+
+
+void state_expunge_expired()
+packet_number++;
+printf("\n------------------------------------\n");
+printf("\n---packet number %d\n",packet_number);
+
+
+state_node* create_node(struct ip_header* h_ip, struct tcp_header* h_tcp,int hash);
+printf("new_state sadr %s\n",ip_string(sn->src_ip));
+printf("new_state dadr %s\n",ip_string(sn->dst_ip));
+printf("new_state src_port %u\n",sn->src_prt);
+printf("new_state dst_port %u\n",sn->dst_prt);
+
+
+
+state_node* find_state(struct ip_header* h_ip, struct tcp_header* h_tcp, int hash);
+printf("packet sadr %s\n",sadr);
+printf("packet dadr %s\n",dadr);
+printf("packet src_port %u\n",h_tcp->src_port);
+printf("packet dst_port %u\n",h_tcp->dst_port);
+
+
+
+printf("hash_state sadr %s\n",ip_string(sn->src_ip));
+	    printf("hash_state dadr %s\n",ip_string(sn->dst_ip));
+	    printf("hash_state src_port %u\n",sn->src_prt);
+	    printf("hash_state dst_port %u\n",sn->dst_prt);
+
+
+	   if (strcmp(ip_string(sn->src_ip), sadr) == 0){
+		printf("strcmp(ip_string(sn->src_ip), sadr) == 0\n");
+		if(strcmp(ip_string(sn->dst_ip), dadr) == 0){
+			printf("strcmp(ip_string(sn->dst_ip), dadr) == 0\n");
+			if(sn->src_prt == h_tcp->src_port){
+				printf("sn->src_prt == ntohs(h_tcp->src_port)\n");
+				if(sn->dst_prt == h_tcp->dst_port){
+					printf("sn->dst_prt == ntohs(h_tcp->dst_port)\n");
+				
+				}
+			}
+		}
+		
+            }
+printf("find state------------return sn\n");
+printf("find state------------return reverse sn\n");
+printf("find state------------return NULL\n");

@@ -1,0 +1,240 @@
+#include "state.h"
+
+state_node *bucket[BUCKET_SIZE];
+int packet_number = 0;
+int flow_number = 0;
+/*
+ * Returns a string with the source and 
+ * destination Ips and ports
+ *
+ */
+
+int get_hash(struct ip_header* h_ip, struct tcp_header* h_tcp){
+    //printf("get_hash function\n");
+   
+    uint8_t int8_saddr[4]; 
+    int i;
+    for(i = 0; i<4;i++){
+	 int8_saddr[i] = (uint8_t)h_ip->saddr[i];
+    }
+    uint16_t int16_saddr1 =  (uint16_t)(int8_saddr[1] << 8) | (uint16_t)(int8_saddr[0]);
+    uint16_t int16_saddr2 =  (uint16_t)(int8_saddr[3] << 8) | (uint16_t)(int8_saddr[2]);
+    uint32_t int32_saddr = (uint32_t)(int16_saddr2 << 16) | (uint32_t)(int16_saddr1);
+
+   uint8_t int8_daddr[4]; 
+    int n;
+    for(n = 0; n<4;n++){
+	 int8_daddr[n] = (uint8_t)h_ip->daddr[n];
+    }
+    uint16_t int16_daddr1 =  (uint16_t)(int8_daddr[1] << 8) | (uint16_t)(int8_daddr[0]);
+    uint16_t int16_daddr2 =  (uint16_t)(int8_daddr[3] << 8) | (uint16_t)(int8_daddr[2]);
+    uint32_t int32_daddr = (uint32_t)(int16_daddr2 << 16) | (uint32_t)(int16_daddr1);
+
+
+    return CXT_HASH4(int32_saddr, ntohs(h_tcp->src_port), int32_daddr, ntohs(h_tcp->dst_port),h_ip->proto);
+}
+
+//add to bucket
+void append_to_list(state_node* sn){
+    //printf("append to list function\n");
+    int hash = sn->hash;
+    state_node * head = bucket[hash];
+
+    /* * New connections are pushed on to the head of bucket[s_hash] */
+    sn->next = head;
+    if (head != NULL) {
+        // are we doubly linked?
+        head->prev = sn;
+    }
+    bucket[hash] = sn;
+
+}
+
+void remove_state_node(state_node* sn, state_node ** bucket_ptr)
+{
+    //printf("remove-state-node function\n");
+    state_node* prev = sn->prev;       /* OLDER connections */
+    state_node* next = sn->next;       /* NEWER connections */
+
+    if (prev == NULL) {
+        // beginning of list
+        *bucket_ptr = next;
+        // not only entry
+        if (next)
+            next->prev = NULL;
+    } else if (next == NULL) {
+        // at end of list!
+        prev->next = NULL;
+    } else {
+        // a node.
+        prev->next = next;
+        next->prev = prev;
+    }
+
+    /*
+     * Free and set to NULL 
+     */
+    free(sn);
+    sn = NULL;
+}
+
+void remove_hash_node(state_node* sn, int hash)
+{
+	//printf("remove-hash-node function\n");
+	/* remove from the hash */
+        if (sn->prev)
+        	sn->prev->next = sn->next;
+        if (sn->next)
+        	sn->next->prev = sn->prev;
+        state_node *tmp = sn;
+
+        sn = sn->prev;
+
+        remove_state_node(tmp, &bucket[hash]);
+	if (sn == NULL) {
+        	bucket[hash] = NULL;
+        }
+
+}
+
+
+void update_time(state_node* sn){
+    //printf("update_time function\n");
+    sn->time = time(NULL);
+}
+
+
+
+void state_expunge_expired()
+{
+    //printf("state_expunge_expired function\n");
+    time_t current = time(NULL);
+    state_node* sn;
+    int iter;
+
+    int ended, expired = 0;
+    time_t check_time = time(NULL);
+
+    for (iter = 0; iter < BUCKET_SIZE; iter++) {
+        sn = bucket[iter];
+        while (sn != NULL) {
+            if (difftime(sn->time, current) > EXPIRE_STATE) {
+                remove_hash_node(sn, iter);
+            } else {
+                sn = sn->prev;
+            }
+        } // end while cxt
+    } // end for buckets
+}
+
+
+
+void close_connection(state_node* sn, int hash){
+	printf("close_connection function\n");
+	remove_hash_node(sn, hash);   
+}
+
+state_node* create_node(struct ip_header* h_ip, struct tcp_header* h_tcp,int hash){
+    printf("Creating Node\n");
+    flow_number++;
+    printf("flow_number %d\n",flow_number);
+    state_node* sn = (state_node*)malloc(sizeof(state_node));
+    memcpy(sn->src_ip, h_ip->saddr,4);
+    sn->src_prt=h_tcp->src_port;
+    memcpy(sn->dst_ip, h_ip->daddr,4);
+    sn->dst_prt = h_tcp->dst_port;
+    sn->time = time(NULL);
+    sn->state = OPEN;
+    sn->hash = hash;
+   
+
+    //printf("Added to hash\n");
+    append_to_list(sn);
+
+    return sn;
+}
+
+//Checks the state of the node if available
+//and checks with the rules is necessary.
+//Returns the action the firewall should take 
+//for the packet.
+rule_type_t process_with_state(struct ip_header* h_ip, struct tcp_header* h_tcp){
+    //printf("process with state function\n");
+
+    int hash = get_hash(h_ip, h_tcp);
+    
+        printf("HASH %d\n",hash);
+        //SYN ACK Packet
+        state_node* sn = find_state(h_ip, h_tcp, hash);
+            
+ 
+	    if(sn == NULL){
+   	    	sn = create_node(h_ip, h_tcp,hash);
+
+	    	char* sadr = ip_string(h_ip->saddr);
+            	char* dadr = ip_string(h_ip->daddr);
+            	rule_type_t rt=  get_firewall_action(rule_list, sadr, dadr, ntohs(h_tcp->src_port), ntohs(h_tcp->dst_port));    
+            	free(sadr);
+            	free(dadr);
+	    	if(rt==PASS){
+			printf("update_state OPEN\n");
+            		update_state(sn, OPEN);
+            	}
+	    	else{
+			printf("update_state CLOSED\n");
+			update_state(sn, CLOSED);
+	    	}
+	    	return rt;
+	    } 	    
+	    
+
+	    state_t s = sn->state;
+            printf("STATE %i\n", s);
+	    update_time(sn);
+            if(s==OPEN){
+                return PASS;
+            }
+	    else{
+		return BLOCK;
+	    }    
+    
+    //}
+}
+
+state_node* find_state(struct ip_header* h_ip, struct tcp_header* h_tcp, int hash){
+
+	//printf("find state\n");
+	state_node* sn = bucket[hash];
+	char* sadr = ip_string(h_ip->saddr);
+        char* dadr = ip_string(h_ip->daddr);
+	
+
+        while (sn != NULL) {
+	   
+	    if ((strcmp(ip_string(sn->src_ip), sadr) == 0)&& (strcmp(ip_string(sn->dst_ip), dadr) == 0) 
+			&& (sn->src_prt == h_tcp->src_port) && (sn->dst_prt == h_tcp->dst_port)){
+		return sn;
+		break;
+            }else if((strcmp(ip_string(sn->src_ip), dadr) == 0)&& (strcmp(ip_string(sn->dst_ip), sadr) == 0) 
+			&& (sn->src_prt == h_tcp->dst_port) && (sn->dst_prt == h_tcp->src_port)){
+		return sn;
+		break;
+	    }
+           sn = sn->prev;
+            
+        } 
+	return NULL;
+}
+
+
+void update_state(state_node* sn,state_t state ){
+    //printf("update state\n");
+    //if the ip string is in our state hash
+    sn->state = state;
+    update_time(sn);
+}
+
+
+
+
+
