@@ -81,14 +81,6 @@ void process_packet_inject(struct interface* iface,const struct pcap_pkthdr *hdr
 
 int main(int argc, char **argv) {
     //intiialize globals
-    //from arp.h
-    //i_dict = NULL;    
-    //waiting = NULL;
-   // arp_tbl = NULL;
-    //from state.h
-    //state_tbl = NULL;
-    //first_state = NULL;
-    //last_state = NULL;
 
     char err[PCAP_ERRBUF_SIZE];
     pcap_t *pch;

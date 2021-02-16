@@ -723,7 +723,7 @@ actionState *action_cxt_new(packetinfo *pi)
 {
 
 
-    printf("create a new action");
+    //printf("create a new action");
     actionState *action_state;
     
     action_state = (actionState *) calloc(1, sizeof(actionState));

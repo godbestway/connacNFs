@@ -9,13 +9,13 @@ int flow_number = 0;
  *
  */
 
-int get_hash(struct ip_header* h_ip, struct tcp_header* h_tcp){
+int get_hash(packetinfo *pi){
     //printf("get_hash function\n");
    
     uint8_t int8_saddr[4]; 
     int i;
     for(i = 0; i<4;i++){
-	 int8_saddr[i] = (uint8_t)h_ip->saddr[i];
+	 int8_saddr[i] = (uint8_t)pi->h_ip->saddr[i];
     }
     uint16_t int16_saddr1 =  (uint16_t)(int8_saddr[1] << 8) | (uint16_t)(int8_saddr[0]);
     uint16_t int16_saddr2 =  (uint16_t)(int8_saddr[3] << 8) | (uint16_t)(int8_saddr[2]);
@@ -24,14 +24,14 @@ int get_hash(struct ip_header* h_ip, struct tcp_header* h_tcp){
    uint8_t int8_daddr[4]; 
     int n;
     for(n = 0; n<4;n++){
-	 int8_daddr[n] = (uint8_t)h_ip->daddr[n];
+	 int8_daddr[n] = (uint8_t)pi->h_ip->daddr[n];
     }
     uint16_t int16_daddr1 =  (uint16_t)(int8_daddr[1] << 8) | (uint16_t)(int8_daddr[0]);
     uint16_t int16_daddr2 =  (uint16_t)(int8_daddr[3] << 8) | (uint16_t)(int8_daddr[2]);
     uint32_t int32_daddr = (uint32_t)(int16_daddr2 << 16) | (uint32_t)(int16_daddr1);
 
 
-    return CXT_HASH4(int32_saddr, ntohs(h_tcp->src_port), int32_daddr, ntohs(h_tcp->dst_port),h_ip->proto);
+    return CXT_HASH4(int32_saddr, ntohs(pi->h_tcp->src_port), int32_daddr, ntohs(pi->h_tcp->dst_port),pi->h_ip->proto);
 }
 
 //add to bucket
@@ -129,23 +129,18 @@ void state_expunge_expired()
 
 
 
-void close_connection(state_node* sn, int hash){
-	printf("close_connection function\n");
-	remove_hash_node(sn, hash);   
-}
-
-state_node* create_node(struct ip_header* h_ip, struct tcp_header* h_tcp,int hash){
+state_node* create_node(packetinfo *pi){
     printf("Creating Node\n");
     flow_number++;
     printf("flow_number %d\n",flow_number);
     state_node* sn = (state_node*)malloc(sizeof(state_node));
-    memcpy(sn->src_ip, h_ip->saddr,4);
-    sn->src_prt=h_tcp->src_port;
-    memcpy(sn->dst_ip, h_ip->daddr,4);
-    sn->dst_prt = h_tcp->dst_port;
+    memcpy(sn->src_ip, pi->h_ip->saddr,4);
+    sn->src_prt= pi->h_tcp->src_port;
+    memcpy(sn->dst_ip, pi->h_ip->daddr,4);
+    sn->dst_prt = pi->h_tcp->dst_port;
     sn->time = time(NULL);
     sn->state = OPEN;
-    sn->hash = hash;
+    sn->hash = pi->hash;
    
 
     //printf("Added to hash\n");
@@ -158,22 +153,23 @@ state_node* create_node(struct ip_header* h_ip, struct tcp_header* h_tcp,int has
 //and checks with the rules is necessary.
 //Returns the action the firewall should take 
 //for the packet.
-rule_type_t process_with_state(struct ip_header* h_ip, struct tcp_header* h_tcp){
+rule_type_t process_with_state(packetinfo *pi){
     //printf("process with state function\n");
 
-    int hash = get_hash(h_ip, h_tcp);
+    int hash = get_hash(pi);
     
         printf("HASH %d\n",hash);
+	pi->hash = hash;
         //SYN ACK Packet
-        state_node* sn = find_state(h_ip, h_tcp, hash);
+        state_node* sn = find_state(pi);
             
  
 	    if(sn == NULL){
-   	    	sn = create_node(h_ip, h_tcp,hash);
+   	    	sn = create_node(pi);
 
-	    	char* sadr = ip_string(h_ip->saddr);
-            	char* dadr = ip_string(h_ip->daddr);
-            	rule_type_t rt=  get_firewall_action(rule_list, sadr, dadr, ntohs(h_tcp->src_port), ntohs(h_tcp->dst_port));    
+	    	char* sadr = ip_string(pi->h_ip->saddr);
+            	char* dadr = ip_string(pi->h_ip->daddr);
+            	rule_type_t rt=  get_firewall_action(rule_list, sadr, dadr, ntohs(pi->h_tcp->src_port), ntohs(pi->h_tcp->dst_port));    
             	free(sadr);
             	free(dadr);
 	    	if(rt==PASS){
@@ -201,22 +197,25 @@ rule_type_t process_with_state(struct ip_header* h_ip, struct tcp_header* h_tcp)
     //}
 }
 
-state_node* find_state(struct ip_header* h_ip, struct tcp_header* h_tcp, int hash){
+
+
+state_node* find_state(packetinfo *pi){
 
 	//printf("find state\n");
-	state_node* sn = bucket[hash];
-	char* sadr = ip_string(h_ip->saddr);
-        char* dadr = ip_string(h_ip->daddr);
-	
+	state_node* sn = bucket[pi->hash];
+	char* sadr = ip_string(pi->h_ip->saddr);
+        char* dadr = ip_string(pi->h_ip->daddr);
+	u_short src_port = pi->h_tcp->src_port;
+        u_short dst_port = pi->h_tcp->dst_port;
 
         while (sn != NULL) {
 	   
 	    if ((strcmp(ip_string(sn->src_ip), sadr) == 0)&& (strcmp(ip_string(sn->dst_ip), dadr) == 0) 
-			&& (sn->src_prt == h_tcp->src_port) && (sn->dst_prt == h_tcp->dst_port)){
+			&& (sn->src_prt == src_port) && (sn->dst_prt == dst_port)){
 		return sn;
 		break;
             }else if((strcmp(ip_string(sn->src_ip), dadr) == 0)&& (strcmp(ip_string(sn->dst_ip), sadr) == 0) 
-			&& (sn->src_prt == h_tcp->dst_port) && (sn->dst_prt == h_tcp->src_port)){
+			&& (sn->src_prt == dst_port) && (sn->dst_prt == src_port)){
 		return sn;
 		break;
 	    }

@@ -12,11 +12,16 @@ void handle_tcp(struct eth_header* h_ether, struct ip_header* h_ip, struct tcp_h
     state_expunge_expired();
     struct interface* i =NULL;
     rule_type_t rt;
+
+
+    packetinfo pstruct = {0};
+    packetinfo *pi = &pstruct;
+    pi->h_ip = h_ip;
+    pi->h_tcp = h_tcp;
     
-    //i = get_interface(h_ip->daddr);
     //get the Rule that applies to this packet
-    rt = process_with_state(h_ip, h_tcp);
-        
+    process_with_conn_state(pi);
+    rt = process_with_action_state(pi);
     //Free interface memory
     free(i);
    
@@ -48,7 +53,6 @@ void handle_udp(struct eth_header* h_ether, struct ip_header* h_ip, struct udp_h
     char* dadr = ip_string(h_ip->daddr);
     rule_type_t rt;
    
-    //i = get_interface(h_ip->daddr);
     //get the Rule that applies to this packet
     rt = get_firewall_action(rule_list, sadr, dadr, ntohs(h_udp->src_port), ntohs(h_udp->dst_port));
     //Free interface memory
@@ -83,7 +87,6 @@ void handle_icmp(struct eth_header* h_ether, struct ip_header* h_ip, struct icmp
     char* dadr = ip_string(h_ip->daddr);
     rule_type_t rt;
    
-    //i = get_interface(h_ip->daddr);
     //get the Rule that applies to this packet
     rt = get_firewall_action(rule_list, sadr, dadr, NULL, NULL);
     //Free interface memory

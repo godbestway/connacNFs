@@ -48,16 +48,18 @@ typedef struct _state_node {
     struct _state_node* prev;//the rpevious node in the list
 }state_node;
 
-int get_hash(struct ip_header* h_ip, struct tcp_header* h_tcp);
+
+
+int get_hash(packetinfo *pi);
 void append_to_list(state_node* sn);
 void remove_state_node(state_node* sn, state_node ** bucket_ptr);
 void remove_hash_node(state_node* sn, int hash);
 void update_time(state_node* sn);
 void state_expunge_expired();
-void close_connection(state_node* sn, int hash);
-state_node* create_node(struct ip_header* h_ip, struct tcp_header* h_tcp,int hash);
-rule_type_t process_with_state(struct ip_header* h_ip, struct tcp_header* h_tcp);
-state_node* find_state(struct ip_header* h_ip, struct tcp_header* h_tcp, int hash);
+state_node* create_node(packetinfo *pi);
+rule_type_t process_with_conn_state(packetinfo *pi);
+rule_type_t process_with_action_state(struct ip_header* h_ip, struct tcp_header* h_tcp);
+state_node* find_state(packetinfo *pi);
 void update_state(state_node* sn,state_t state );
 
 

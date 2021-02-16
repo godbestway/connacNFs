@@ -28,6 +28,15 @@
 
 // START Similar to
 // https://www.winpcap.org/docs/docs_40_2/html/group__wpcap__tut6.html
+typedef struct _packetinfo {
+	struct ip_header* h_ip; 
+	struct tcp_header* h_tcp;
+	int hash;
+	int cxid;
+} packetinfo;
+
+
+
 struct ip_address {
     u_char byte1;
     u_char byte2;

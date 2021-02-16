@@ -74,8 +74,9 @@ void parse_rules(struct rule** rule_vals){
                 //memcpy(last, r, sizeof(struct rule));
             }
             last = r;
-            printf("read rules print");
-            print_rules(last);
+            
+	    //printf("read rules print");
+            //print_rules(last);
             r = malloc(sizeof(struct rule));
 	    printf("finish-------\n");
         }
@@ -109,6 +110,7 @@ void print_all_rules(struct rule *rule_chain){
 
 //Returns 1 if the rule matches, otherwise 0.
 int match(struct rule *rule_chain, u_char* saddr, u_char* daddr){
+    printf("match funtion\n");
     struct rule* r = rule_chain;
     char any[] = "any";
     if((strcmp(any, r->src_ip)==0) || (strcmp(r->src_ip, saddr)==0)){
@@ -129,13 +131,13 @@ int match(struct rule *rule_chain, u_char* saddr, u_char* daddr){
 // If there is no matching rule, return PASS as default.
 rule_type_t get_firewall_action(struct rule *rule_chain, u_char* saddr, u_char* daddr, u_short src_port, u_short dst_port){
 
-    //printf("saddr: %s\n", saddr);
+     printf("get_firewall_action\n");
     //printf("daddr: %s\n", daddr);
     struct rule* r = rule_chain; 
     const char* any = "any";
     while(r != NULL){
         //print_rules(r);
-        printf("\n\n");
+        //printf("\n\n");
         //if ICMP there won't be src or dst ports
         if(dst_port != NULL && src_port !=NULL){
             //compare source port

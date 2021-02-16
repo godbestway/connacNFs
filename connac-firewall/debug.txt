@@ -35,9 +35,9 @@ printf("\n---packet number %d\n",packet_number);
 
 state_node* create_node(struct ip_header* h_ip, struct tcp_header* h_tcp,int hash);
 printf("new_state sadr %s\n",ip_string(sn->src_ip));
-    printf("new_state dadr %s\n",ip_string(sn->dst_ip));
-    printf("new_state src_port %u\n",sn->src_prt);
-    printf("new_state dst_port %u\n",sn->dst_prt);
+printf("new_state dadr %s\n",ip_string(sn->dst_ip));
+printf("new_state src_port %u\n",sn->src_prt);
+printf("new_state dst_port %u\n",sn->dst_prt);
 
 
 

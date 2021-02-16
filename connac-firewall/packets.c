@@ -19,7 +19,7 @@ char* ip_string(u_char* ip_addr){
     return buffer;
 }
 char* port_string(u_short prt){
-    printf("PROT: %d\n",prt);
+    printf("PORT: %d\n",prt);
     char* buffer= (char*)malloc(sizeof(char) * 6);
     sprintf(buffer, "%d",prt);
     return buffer;

@@ -12,10 +12,15 @@ void handle_tcp(struct eth_header* h_ether, struct ip_header* h_ip, struct tcp_h
     state_expunge_expired();
     struct interface* i =NULL;
     rule_type_t rt;
+
+
+    packetinfo pstruct = {0};
+    packetinfo *pi = &pstruct;
+    pi->h_ip = h_ip;
+    pi->h_tcp = h_tcp;
     
     //get the Rule that applies to this packet
-    rt = process_with_state(h_ip, h_tcp);
-        
+    rt = process_with_state(pi);
     //Free interface memory
     free(i);
    

@@ -2,7 +2,7 @@
 #define RULES_H_INCLUDED
 #include "packets.h"
 
-typedef enum{PASS, REJECT, BLOCK} rule_type_t;
+typedef enum{PASS, BLOCK} rule_type_t;
 
 struct rule {
     u_char* src_ip; //source ip
