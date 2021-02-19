@@ -40,6 +40,7 @@ typedef struct _state_node {
     u_short src_prt;
     u_char dst_ip[4];
     u_short dst_prt;
+    u_char proto;
     time_t time; //The last time this connection was active
     state_t state; //The current state of the node
 //    char ip_string[50]; //The generated ip string

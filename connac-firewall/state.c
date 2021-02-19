@@ -14,26 +14,24 @@ int action_flow = 0;
 int get_hash(packetinfo *pi){
     printf("get_hash function\n");
    
-    uint8_t int8_saddr[4]; 
-    int i;
-    for(i = 0; i<4;i++){
-	 int8_saddr[i] = (uint8_t)pi->h_ip->saddr[i];
-    }
-    uint16_t int16_saddr1 =  (uint16_t)(int8_saddr[1] << 8) | (uint16_t)(int8_saddr[0]);
-    uint16_t int16_saddr2 =  (uint16_t)(int8_saddr[3] << 8) | (uint16_t)(int8_saddr[2]);
-    uint32_t int32_saddr = (uint32_t)(int16_saddr2 << 16) | (uint32_t)(int16_saddr1);
-
-   uint8_t int8_daddr[4]; 
-    int n;
-    for(n = 0; n<4;n++){
-	 int8_daddr[n] = (uint8_t)pi->h_ip->daddr[n];
-    }
-    uint16_t int16_daddr1 =  (uint16_t)(int8_daddr[1] << 8) | (uint16_t)(int8_daddr[0]);
-    uint16_t int16_daddr2 =  (uint16_t)(int8_daddr[3] << 8) | (uint16_t)(int8_daddr[2]);
-    uint32_t int32_daddr = (uint32_t)(int16_daddr2 << 16) | (uint32_t)(int16_daddr1);
+    uint32_t int32_saddr = get_int_ip(pi->h_ip->saddr);
+    uint32_t int32_daddr = get_int_ip(pi->h_ip->daddr);
 
 
     return CXT_HASH4(int32_saddr, ntohs(pi->h_tcp->src_port), int32_daddr, ntohs(pi->h_tcp->dst_port),pi->h_ip->proto);
+}
+
+uint32_t get_int_ip(u_char* addr){
+    uint8_t int8_addr[4]; 
+    int n;
+    for(n = 0; n<4;n++){
+	 int8_addr[n] = (uint8_t)addr[n];
+    }
+    uint16_t int16_addr1 =  (uint16_t)(int8_addr[1] << 8) | (uint16_t)(int8_addr[0]);
+    uint16_t int16_addr2 =  (uint16_t)(int8_addr[3] << 8) | (uint16_t)(int8_addr[2]);
+    uint32_t int32_addr = (uint32_t)(int16_addr2 << 16) | (uint32_t)(int16_addr1);
+
+    return int32_addr;
 }
 
 //add to bucket
@@ -191,9 +189,9 @@ void state_expunge_expired()
     for (iter = 0; iter < BUCKET_SIZE; iter++) {
         action_state = action_bucket[iter];
         while (action_state != NULL) {
-	    printf("out time not remove_hash_action_node\n");
+	    //printf("out time not remove_hash_action_node\n");
             if (difftime(action_state->time, current) > EXPIRE_STATE) {
-		printf("out time real remove_hash_action_node\n");
+		//printf("out time real remove_hash_action_node\n");
         	remove_hash_action_node(action_state, iter);
 		remove_hash_conn_node(action_state->cxid, iter);
             } else {
@@ -218,7 +216,7 @@ connState* create_conn_node(packetinfo *pi){
     conn_state->cxid = cxid;
     pi->cxid = cxid;
     conn_state->hash = pi->hash;
-    
+    conn_state->proto = (uint8_t)pi->h_ip->proto;
 
     //printf("Added to hash\n");
     append_to_conn_list(conn_state);

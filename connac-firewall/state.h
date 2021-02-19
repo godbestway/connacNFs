@@ -21,7 +21,7 @@
 #include "rules.h"
 
 #define BUCKET_SIZE  31337
-#define EXPIRE_STATE 1
+#define EXPIRE_STATE 10000
 
 
 #define CXT_HASH4(src,dst,sp,dp,pr) \
@@ -40,6 +40,7 @@ typedef struct _conn_state {
     u_short src_prt;
     u_char dst_ip[4];
     u_short dst_prt;
+    uint8_t  proto;          // Protocol
     int hash;
     int cxid;
     struct _conn_state* next;//The next state_node in the list
@@ -56,6 +57,8 @@ typedef struct _action_state {
 }actionState;
 
 int get_hash(packetinfo *pi);
+uint32_t get_int_ip(u_char* addr);
+
 void append_to_conn_list(connState* conn_state);
 void append_to_action_list(actionState* action_state);
 void remove_conn_state_node(connState* conn_state, connState ** bucket_ptr);

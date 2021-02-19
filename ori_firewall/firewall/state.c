@@ -31,7 +31,7 @@ int get_hash(packetinfo *pi){
     uint32_t int32_daddr = (uint32_t)(int16_daddr2 << 16) | (uint32_t)(int16_daddr1);
 
 
-    return CXT_HASH4(int32_saddr, ntohs(pi->h_tcp->src_port), int32_daddr, ntohs(pi->h_tcp->dst_port),pi->h_ip->proto);
+    return CXT_HASH4(int32_saddr, pi->h_tcp->src_port, int32_daddr, pi->h_tcp->dst_port,pi->h_ip->proto);
 }
 
 //add to bucket
@@ -138,6 +138,7 @@ state_node* create_node(packetinfo *pi){
     sn->src_prt= pi->h_tcp->src_port;
     memcpy(sn->dst_ip, pi->h_ip->daddr,4);
     sn->dst_prt = pi->h_tcp->dst_port;
+    sn->proto = pi->h_ip->proto;
     sn->time = time(NULL);
     sn->state = OPEN;
     sn->hash = pi->hash;
